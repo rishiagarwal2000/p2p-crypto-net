@@ -21,7 +21,7 @@ def calc_latency(type_s, type_r, data_size):
         ## Returns the time taken for transfer of data
         pass
 
-class simulator:
+class Simulator:
 
     def __init__(self, cfg_file):
         ## cfg_file contains all the parameters for the simulation experiment
@@ -35,7 +35,7 @@ class simulator:
         pass
 
 
-class peer:
+class Peer:
 
     def __init__(self, idx, txn_inter_arrival_mean, mean_mining_time, peer_type, neighbours, mining_fee, simulator):
         ## idx is the index of the peer 
@@ -46,27 +46,27 @@ class peer:
         self.peer_type = peer_type 
         self.pending_txns = set() 
         self.seen_txns = set()
+        self.pending_blocks = []
         self.simulator = simulator
-        self.blocktree = [block(None,None,None,None,True)]
+        self.blocktree = [Block(None,None,None,None,True)]
         self.next_block_creation_event = None ## Time at which our next block will be created
         self.current_chain_end = self.blocktree[0]
-        self.neighbours = neighbours ## list of peers
+        self.neighbours = {nei : set() for nei in neighbours} ## dict of peers : msg sent from us to them
         self.mining_fee = mining_fee
 
     def broadcast(self, msg):
-        ## msg can be a transaction or block
-        ## add receiving events on neighbours
-        for neighbour in self.neighbours: 
-            latency = calc_latency(self.peer_type, neighbour.peer_type, msg.size)
-            receiving_time = self.simulator.current_time + latency 
-            if isinstance(msg, transaction):
-                func = neighbour.receive_transaction
-                args = {"txn" : msg}
-            else:
-                func = neighbour.receive_block
-                args = {"block" : msg}
-            self.simulator.add_event(event(func,args), receiving_time)
-
+        for neighbour, sent in self.neighbours.items():
+            if msg not in sent and msg not in neighbour.neighbours[self]:
+                latency = calc_latency(self.peer_type, neighbour.peer_type, msg.size)
+                receiving_time = self.simulator.current_time + latency 
+                if isinstance(msg, Transaction):
+                    func = neighbour.receive_transaction
+                    args = {"txn" : msg}
+                else:
+                    func = neighbour.receive_block
+                    args = {"block" : msg}
+                self.simulator.add_event(Event(func,args), receiving_time)
+        
     def create_transaction(self, args):
         # Samples from the exponential distribution
         # Returns Id_y, C, and the time of transaction
@@ -76,17 +76,17 @@ class peer:
         txn_id = uuid1()
         coins = None ## Discuss how to generate coins. We do 
         ##              have our estimate of balance depending on the block we are mining on
-        new_txn = transaction(txn_id, self.idx, idy, coins)
+        new_txn = Transaction(txn_id, self.idx, idy, coins)
         self.pending_txns.add(new_txn)
         self.broadcast(new_txn)
         next_txn_time = self.simulator.current_time+round(np.random.exponential(self.Ttx))
-        create_txn_event = event(self.create_transaction,{})
+        create_txn_event = Event(self.create_transaction,{})
         self.simulator.add_event(create_txn_event, next_txn_time)
 
 
     def mine_block(self):
         coinbase_id = uuid1()
-        coinbase = transaction(coinbase_id,None,self.idx,self.mining_fee)
+        coinbase = Transaction(coinbase_id,None,self.idx,self.mining_fee)
         while True:
             num_of_transactions = np.random.randint(0,1024)
             curr_block_txns = list(np.random.choice(list(self.pending_txns),num_of_transactions))
@@ -96,19 +96,18 @@ class peer:
             if checkpoint:
                 break
         blkid = uuid1()
-        args = {"block": block(blkid, self.current_chain_end, curr_block_txns, self.idx, False)}
+        args = {"block": Block(blkid, self.current_chain_end, curr_block_txns, self.idx, False)}
         creation_time = self.simulator.current_time + round(np.random.exponential(self.mean_mining_time))
-        block_create_event = event(self.create_block,args) 
+        block_create_event = Event(self.create_block,args) 
         self.simulator.add_event(block_create_event, creation_time)
         
 
     def create_block(self, args):
-        ## Take transactions from list of maintained transactions
-        ## Sample duration of creation from exponential distribution
         block = args["block"]
         self.blocktree.append(block)
         self.current_chain_end = block
         self.pending_txns -= set(block.txns)
+        self.seen_txns |= set(block.txns)
         self.broadcast(block)
         self.mine_block()
     
@@ -142,37 +141,66 @@ class peer:
 
     def receive_transaction(self, args):
         txn = args["txn"]
+        self.broadcast(txn)
         if txn not in self.seen_txns:
             self.pending_txns.add(txn)
-        
-    def receive_block(self, args):
-        ## Validate a given block
-        ## Check if BLKID is also unique
-        ## Remember to remove common transactions from transactions list if block is correct and also broadcast it
-        ## Remember to cancel block creation event if new longest chain appears
-        block = args["block"]
-        checkpoint = (block.parent).checkpoint.copy()
-        checkpoint = self.get_new_checkpoint(checkpoint, block.txns)
-        if checkpoint:
-            block.store_checkpoint(checkpoint)
-            self.blocktree.append(block)
-            if block.chain_length > self.current_chain_end.chain_length:
-                (self.next_block_creation_event).execute = False 
-                self.pending_txns -= set(block.txns)
-                if block.parent == self.current_chain_end:
-                    self.seen_txns |= set(block.txns)
-                else:
-                    ancestor = block
-                    self.seen_txns = set()
-                    while ancestor.blkid!="GENESIS":
-                        self.seen_txns |= set(ancestor.txns)
-                        ancestor = ancestor.parent
-                self.current_chain_end = block
-                self.mine_block()
-            return True 
-        return False
+    
+    def add_pending_blocks(self, new_block):
+        remove_blocks = set()
+        max_chain_length_block=new_block
+        for block in self.pending_blocks:
+            if block.parent in self.blocktree:
+                checkpoint = (block.parent).checkpoint.copy()
+                checkpoint = self.get_new_checkpoint(checkpoint, block.txns)
+                if checkpoint:
+                    block.store_checkpoint(checkpoint)
+                    self.blocktree.append(block)
+                    if block.chain_length > max_chain_length_block.chain_length:
+                        max_chain_length_block = block
+                remove_blocks.add(block)
+        self.pending_blocks = list(set(self.pending_blocks) - remove_blocks)
+        return max_chain_length_block
 
-class block:
+    def receive_block(self, args):
+        block = args["block"]
+        if block.parent not in self.blocktree:
+            self.pending_blocks.append(block)
+            self.broadcast(block)
+        else:
+            checkpoint = (block.parent).checkpoint.copy()
+            checkpoint = self.get_new_checkpoint(checkpoint, block.txns)
+            if checkpoint:
+                # broadcast here 
+                block.store_checkpoint(checkpoint)
+                self.blocktree.append(block)
+                if block.parent == self.current_chain_end:
+                    self.next_block_creation_event.execute = False
+                    self.seen_txns |= set(block.txns)
+                    self.pending_txns -= set(block.txns)
+                    self.current_chain_end = block
+                    temp_chain_end=add_pending_blocks(block)
+                    if temp_chain_end != self.current_chain_end:
+                        pointer = temp_chain_end
+                        while pointer != self.current_chain_end:
+                            self.pending_txns -= set(pointer.txns)
+                            self.seen_txns |= set(pointer.txns)
+                            pointer = pointer.parent
+                    self.current_chain_end = temp_chain_end
+                    self.mine_block()
+                else:
+                    temp_chain_end=add_pending_blocks(block)
+                    if temp_chain_end.chain_length > self.current_chain_end.chain_length:
+                        self.next_block_creation_event.execute = False
+                        pointer = temp_chain_end
+                        self.seen_txns = set()
+                        while pointer.blkid != "GENESIS":
+                            self.seen_txns |= set(pointer.txns)
+                            pointer = pointer.parent
+                        self.pending_txns -= self.seen_txns
+                        self.current_chain_end = temp_chain_end
+                        self.mine_block()
+                
+class Block:
 
     def __init__(self, blkid, parent, list_of_transactions, gen_peer_id, genesis_block):
         ## Initialize block
@@ -196,7 +224,7 @@ class block:
         self.checkpoint = checkpoint
         
 
-class event:
+class Event:
 
     def __init__(self, func, args):
         self.func = func
@@ -207,7 +235,7 @@ class event:
         if self.execute:
             func(args)
 
-class transaction:
+class Transaction:
 
     def __init__(self, txn_id, sender, receiver, coins):
         self.txn_id = txn_id ## Must be unique
