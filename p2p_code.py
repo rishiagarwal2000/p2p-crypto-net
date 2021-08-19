@@ -1,7 +1,7 @@
 import numpy as np
 import yaml 
 import heapq 
-from secrets import token_hex
+from uuid import uuid1
 
 """
 Notes : 
@@ -73,7 +73,7 @@ class peer:
         current_peers = self.simulator.peer_ids.copy()
         current_peers.remove(self.idx)
         idy = np.random.choice(current_peers)
-        txn_id = token_hex(16)
+        txn_id = uuid1()
         coins = None ## Discuss how to generate coins. We do 
         ##              have our estimate of balance depending on the block we are mining on
         new_txn = transaction(txn_id, self.idx, idy, coins)
@@ -85,7 +85,7 @@ class peer:
 
 
     def mine_block(self):
-        coinbase_id = token_hex(16)
+        coinbase_id = uuid1()
         coinbase = transaction(coinbase_id,None,self.idx,self.mining_fee)
         while True:
             num_of_transactions = np.random.randint(0,1024)
@@ -95,7 +95,7 @@ class peer:
             checkpoint = self.get_new_checkpoint(checkpoint, curr_block_txns)
             if checkpoint:
                 break
-        blkid = token_hex(16)
+        blkid = uuid1()
         args = {"block": block(blkid, self.current_chain_end, curr_block_txns, self.idx, False)}
         creation_time = self.simulator.current_time + round(np.random.exponential(self.mean_mining_time))
         block_create_event = event(self.create_block,args) 
