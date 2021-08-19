@@ -44,7 +44,8 @@ class peer:
         self.Ttx = txn_inter_arrival_mean
         self.mean_mining_time = mean_mining_time
         self.peer_type = peer_type 
-        self.pending_txns = [] 
+        self.pending_txns = set() 
+        self.seen_txns = set()
         self.simulator = simulator
         self.blocktree = [block(None,None,None,None,True)]
         self.next_block_creation_event = None ## Time at which our next block will be created
@@ -141,7 +142,8 @@ class peer:
 
     def receive_transaction(self, args):
         txn = args["txn"]
-        self.pending_txns.add(txn)
+        if txn not in self.seen_txns:
+            self.pending_txns.add(txn)
         
     def receive_block(self, args):
         ## Validate a given block
@@ -157,8 +159,16 @@ class peer:
             if block.chain_length > self.current_chain_end.chain_length:
                 (self.next_block_creation_event).execute = False 
                 self.pending_txns -= set(block.txns)
+                if block.parent == self.current_chain_end:
+                    self.seen_txns |= set(block.txns)
+                else:
+                    ancestor = block
+                    self.seen_txns = set()
+                    while ancestor.blkid!="GENESIS":
+                        self.seen_txns |= set(ancestor.txns)
+                        ancestor = ancestor.parent
                 self.current_chain_end = block
-                self.mine_on(block)
+                self.mine_block()
             return True 
         return False
 
