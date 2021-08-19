@@ -37,7 +37,7 @@ class Simulator:
 
 class Peer:
 
-    def __init__(self, idx, txn_inter_arrival_mean, mean_mining_time, peer_type, neighbours, mining_fee, simulator):
+    def __init__(self, idx, txn_inter_arrival_mean, mean_mining_time, peer_type, mining_fee, simulator):
         ## idx is the index of the peer 
         ## Type here means fast or slow
         self.idx = idx 
@@ -51,8 +51,10 @@ class Peer:
         self.blocktree = [Block(None,None,None,None,True)]
         self.next_block_creation_event = None ## Time at which our next block will be created
         self.current_chain_end = self.blocktree[0]
-        self.neighbours = {nei : set() for nei in neighbours} ## dict of peers : msg sent from us to them
         self.mining_fee = mining_fee
+
+    def initialise_neighbours(self, neighbours):
+        self.neighbours = {nei : set() for nei in neighbours} ## dict of peers : msg sent from us to them
 
     def broadcast(self, msg):
         for neighbour, sent in self.neighbours.items():
