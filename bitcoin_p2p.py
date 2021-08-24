@@ -27,7 +27,7 @@ class node:
         self.last_received_block = -1
         self.block_chain = {genesis_block.id: 0}
         self.err_epsilon = 1e-6
-        self.Tk = 10
+        self.Tk = Tk
     def add_peer(self, other):
         if other not in self.peers:
             self.peers.append(other)
@@ -208,6 +208,8 @@ class Simulator:
             new_params = i
             new_event = ('gen_block', new_params)
             new_events.append((new_time, new_event))
+        else:
+            self.block_chain.pop(block_id)
         node.longest_chain_block = block
         node.block_chain[block_id] = time
         return new_events
@@ -307,6 +309,7 @@ class Simulator:
 
 if __name__ == '__main__':
     Tks = [100, 90, 80, 70, 60, 55, 50, 45, 40, 30]
+    # Tks = [100, 100, 100, 100, 100, 100, 100, 100, 100, 10]
     np.random.shuffle(Tks)
     sim = Simulator(10, 0, 10, Tks)
     sim.simulate()
