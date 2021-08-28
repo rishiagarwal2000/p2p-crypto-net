@@ -17,7 +17,7 @@ class PriorityEntry(object):
 np.random.seed(765)
 
 class node:
-    def __init__(self, id, is_slow, genesis_block, Tk=10):
+    def __init__(self, id, is_slow, genesis_block, hashing_fraction=1/10, TIME=10*60):
         self.id = id
         self.is_slow = is_slow
         self.peers = []
@@ -27,7 +27,12 @@ class node:
         self.last_received_block = -1
         self.block_chain = {genesis_block.id: 0}
         self.err_epsilon = 1e-6
-        self.Tk = Tk
+        self.Tk = TIME / hashing_fraction
+        self.hashing_fraction = hashing_fraction
+
+        # data/stats
+        self.num_blocks = 0
+        self.confirmed_blocks = 0
     def add_peer(self, other):
         if other not in self.peers:
             self.peers.append(other)
@@ -68,25 +73,26 @@ class Block:
             print(f"id: {self.id}, GENESIS, length: {self.length}")
         return self.txns.keys()
 class Simulator:
-    def __init__(self, n, z, Ttx, Tks):
+    def __init__(self, n, z, Ttx, hashing_fractions):
         self.n = n
         self.z = z
         self.Ttx = Ttx
-        self.Tks = Tks
+        self.hashing_fractions = hashing_fractions
         self.genesis_block = Block(None, {}, {i:0 for i in range(self.n)}, None)
         self.block_chain = {self.genesis_block.id:self.genesis_block}
         num_slow = int(round(n * z))
-        self.nodes = [node(i, i<=num_slow, self.genesis_block, Tk=Tks[i]) for i in range(n)]
+        self.nodes = [node(i, i<=num_slow, self.genesis_block, hashing_fraction=hashing_fractions[i]) for i in range(n)]
         self.form_network()
         self.txns = {}
         self.event_queue = PriorityQueue(0)
         self.event_space = {"gen_block": self.gen_block, "send_block": self.send_block, "receive_block": self.receive_block, "gen_transaction": self.gen_transaction, "receive_transaction": self.receive_transaction}
         self.time = 0
         self.MAX_TIME = 100
-        self.MAX_NUM_EVENTS = 5000
+        self.MAX_NUM_EVENTS = 500000
         self.MAX_NUM_TRANSACTIONS = 1000
         self.MINING_REWARD = 50
         self.eps = 1e-7
+
         for i in range(self.n):
             self.event_queue.put(PriorityEntry(0, ("gen_block", i)))
             self.event_queue.put(PriorityEntry(0, ("gen_transaction", i)))
@@ -95,33 +101,42 @@ class Simulator:
         added = [perm[0]]
         for i in perm[1:]:
             peer = np.random.choice(added)
+            added.append(i)
             self.nodes[peer].add_peer(self.nodes[i])
             self.nodes[i].add_peer(self.nodes[peer])
-        deg = 3
+        deg = min(1, self.n)
         perm.reverse()
         for i in perm:
             peers = np.random.choice(perm, size=deg, replace=False)
             for peer in peers:
                 self.nodes[peer].add_peer(self.nodes[i])
                 self.nodes[i].add_peer(self.nodes[peer])
+        for i in range(self.n):
+            print(f'Neighbours of {i}: {[peer.id for peer in self.nodes[i].peers]}')
     def simulate(self):
         count_events = 0
-        while not self.event_queue.empty() and count_events < self.MAX_NUM_EVENTS:
+        while not self.event_queue.empty():
             count_events += 1
             entry = self.event_queue.get()
             time, event = entry.priority, entry.data
             event_func, event_params = event
-            print(f"Executing {event_func} at {time}, {event_params}")
-            new_events = self.event_space[event_func](event_params, time)
-            for new_time, new_event in new_events:
-                print(f"Adding new {new_event[0]} for {new_time}, {new_event[1]}")
-                self.event_queue.put(PriorityEntry(new_time, new_event))
-            self.time = time
-        for block_id, block in self.block_chain.items():
-            print(f"{block_id}")
-            txn_ids = block.print()
-            for txn_id in txn_ids:
-                self.txns[txn_id].print()
+            # print(f"Executing {event_func} at {time}, {event_params}")
+            if count_events < self.MAX_NUM_EVENTS:
+                print(count_events)
+                new_events = self.event_space[event_func](event_params, time)
+                for new_time, new_event in new_events:
+                    # print(f"Adding new {new_event[0]} for {new_time}, {new_event[1]}")
+                    self.event_queue.put(PriorityEntry(new_time, new_event))
+                self.time = time
+            else:
+                if event_func.split("_")[1] == "block":
+                    print(f"Abandoned {event_func} at {time}, {event_params}")
+        
+        # for block_id, block in self.block_chain.items():
+        #     print(f"{block_id}")
+        #     txn_ids = block.print()
+        #     for txn_id in txn_ids:
+        #         self.txns[txn_id].print()
     def gen_transaction(self, params, time):
         i = params
         idx, node = i, self.nodes[i]
@@ -196,6 +211,7 @@ class Simulator:
         node = self.nodes[i]
         new_events = []
         if node.last_received_block < gen_time:
+            node.num_blocks += 1
             for peer in node.peers:
                 if peer.id not in node.history.get(block_id, []):
                     print(f"{i} sent block {block.id} to {peer.id}")
@@ -218,7 +234,7 @@ class Simulator:
         node = self.nodes[i]
         new_events = []
         block = self.block_chain[block_id]
-        print(f"{i} received block {block.id} from {sender}")
+        # print(f"{i} received block {block.id} from {sender}")
         if self.is_valid_block(block_id):
             if block_id not in node.block_chain.keys():
                 node.block_chain[block_id] = time
@@ -247,7 +263,7 @@ class Simulator:
     def is_valid_block(self, block_id):
         return True
     def get_inter_arrival(self):
-        return 20 #np.random.exponential(self.Ttx)
+        return np.random.exponential(self.Ttx)
     def find_confirm_chain(self):
         node_wise_last_blocks_temp = []
         min_length = len(self.block_chain)
@@ -273,6 +289,17 @@ class Simulator:
                 backtrack = False
                 confirm_block = node_wise_last_blocks_temp[0]
         return confirm_block
+    def compute_confirmed_blocks_per_node(self):
+        confirm_block = self.find_confirm_chain()
+        cur_block = confirm_block
+        for i in range(self.n):
+            self.nodes[i].confirmed_blocks = 0
+        while True:
+            if cur_block is not None and cur_block.miner is not None:
+                self.nodes[cur_block.miner.id].confirmed_blocks += 1
+                cur_block = cur_block.parent
+            else:
+                break
     def show_blockchain(self):
         confirm_block = self.find_confirm_chain()
         tree = nx.DiGraph()
@@ -306,11 +333,42 @@ class Simulator:
         plt.legend(handles=[genesis_patch, confirmed_patch, unconfirmed_patch], loc="upper right")        
         plt.savefig('blockchain.png', dpi=300, bbox_inches='tight')
         plt.show()
+    def print_block_chain_all_nodes(self):
+        for i in range(self.n):
+            print(f" -- Node {i} -- ")
+            self.nodes[i].longest_chain_block.print()
+    def plot_confirmed_per_gen_block(self):
+        self.compute_confirmed_blocks_per_node()
+        x = [i for i in range(self.n)]
+        tick_label = [str(self.nodes[i].hashing_fraction) for i in range(self.n)]
+        y = [self.nodes[i].confirmed_blocks / self.nodes[i].num_blocks if self.nodes[i].num_blocks > 0 else 0 for i in range(self.n)]
+        # print(y)
+        plt.bar(x,y,tick_label=tick_label, width=0.8)
+        plt.xlabel('Hashing fraction')
+        plt.ylabel('Ratio of contributed blocks to generated blocks')
+        plt.show()
+    def plot_fraction_of_confirmed_blocks(self):
+        self.compute_confirmed_blocks_per_node()
+        x = [i for i in range(self.n)]
+        tick_label = [str(self.nodes[i].hashing_fraction) for i in range(self.n)]
+        total_confirmed_blocks = self.find_confirm_chain().length
+        y = [self.nodes[i].confirmed_blocks / total_confirmed_blocks for i in range(self.n)]
+        plt.bar(x,y,tick_label=tick_label, width=0.8)
+        plt.xlabel('Hashing fraction')
+        plt.ylabel('Fraction of contributed blocks')
+        plt.show()
+
 
 if __name__ == '__main__':
-    Tks = [100, 90, 80, 70, 60, 55, 50, 45, 40, 30]
-    # Tks = [100, 100, 100, 100, 100, 100, 100, 100, 100, 10]
-    np.random.shuffle(Tks)
-    sim = Simulator(10, 0, 10, Tks)
+    hfs = [0.1 for i in range(10)]
+    hfs = [0.4] + [0.6/9 for i in range(9)]
+    # hfs = [0.7, 0.3]
+    #Tks = [100, 90, 80, 70, 60, 55, 50, 45, 40, 30]
+    #Tks = [100, 100, 100, 100, 100, 100, 100, 100, 100, 10]
+    np.random.shuffle(hfs)
+    sim = Simulator(10, 0, 100, hfs)
     sim.simulate()
     sim.show_blockchain()
+    sim.plot_confirmed_per_gen_block()
+    sim.plot_fraction_of_confirmed_blocks()
+    sim.print_block_chain_all_nodes()
