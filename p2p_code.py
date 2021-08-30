@@ -133,7 +133,7 @@ class Peer:
         for neighbour, sent in self.neighbours.items():
             if msg not in sent and msg not in neighbour.neighbours[self]:
                 latency = self.simulator.calc_latency(self.peer_type, neighbour.peer_type, msg.size,self.simulator.rho[self.idx,neighbour.idx])
-                receiving_time = round(self.simulator.current_time + latency,2)
+                receiving_time = round(self.simulator.current_time + latency)
                 if isinstance(msg, Transaction):
                     func = neighbour.receive_transaction
                     args = {"txn" : msg}
@@ -156,7 +156,7 @@ class Peer:
         new_txn = Transaction(txn_id, self.idx, idy, coins)
         self.pending_txns.add(new_txn)
         self.broadcast(new_txn)
-        next_txn_time = round(self.simulator.current_time+np.random.exponential(self.Ttx),2)
+        next_txn_time = round(self.simulator.current_time+np.random.exponential(self.Ttx))
         create_txn_event = Event(self.create_transaction,{})
         self.simulator.add_event(create_txn_event, next_txn_time)
 
@@ -174,7 +174,7 @@ class Peer:
                 break
         blkid = uuid1()
         args = {"block": Block(blkid, self.current_chain_end, curr_block_txns, self.idx, False)}
-        creation_time = round(self.simulator.current_time + np.random.exponential(self.mean_mining_time),2)
+        creation_time = round(self.simulator.current_time + np.random.exponential(self.mean_mining_time))
         block_create_event = Event(self.create_block,args) 
         self.simulator.add_event(block_create_event, creation_time)
         
