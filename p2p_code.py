@@ -377,7 +377,7 @@ class Peer:
         plt.bar(x, y, color ='blue',width = 0.4)
         for index, value in enumerate(y):
             value = round(value,3)
-            plt.text(index , 1.03*value,'%f' % value, ha='center', va='bottom')
+            plt.text(index , 1.02*value,'%f' % value, ha='center', va='bottom')
         plt.xticks(x)
         plt.xlabel("Peer ID")
         plt.ylabel("Fraction of Longest chain")
@@ -398,7 +398,7 @@ class Peer:
         plt.bar(x, y, color ='blue',width = 0.4)
         for index, value in enumerate(y):
             value = round(value,3)
-            plt.text(index , 1.03*value,'%f' % value, ha='center', va='bottom')
+            plt.text(index , 1.02*value,'%f' % value, ha='center', va='bottom')
         plt.xticks(x)
         plt.xlabel("Peer ID")
         plt.ylabel("Fraction of total blocks")
@@ -429,7 +429,7 @@ class Peer:
         fig = plt.figure(figsize = (10, 5))
         plt.bar(x, y, color ='blue',width = 0.4)
         for index, value in enumerate(y):
-            plt.text(index , 1.03*value,'%d' % int(value), ha='center', va='bottom')
+            plt.text(index , 1.02*value,'%d' % int(value), ha='center', va='bottom')
         plt.xticks(x)
         plt.xlabel("Branches (SB : Side Branch ; MB : Main Branch)")
         plt.ylabel("Length in number of blocks")
