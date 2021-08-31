@@ -4,6 +4,8 @@ import heapq
 from uuid import uuid1
 import argparse
 import networkx as nx
+import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
 """
 Notes : 
 
@@ -57,6 +59,7 @@ class Simulator:
     
     def create_peers(self):
         n = self.cfg["num_peers"]
+        genesis_block = Block(None,None,None,None,True)
         slow_peers = round(n*self.cfg["slow_fraction"])
         temp = list(np.random.permutation(n))
         peer_types=[(idx, "slow") for idx in temp[:slow_peers]]+[(idx, "fast") for idx in temp[slow_peers:]]
@@ -65,7 +68,7 @@ class Simulator:
         self.peer_graph = graph
         self.peer_list=[]
         for idx, peer_type in peer_types:
-            self.peer_list.append(Peer(idx, self.cfg["txn_inter_arrival_time"], self.cfg["mean_mining_time"],peer_type,self.cfg["mining_fee"],self))
+            self.peer_list.append(Peer(idx, self.cfg["txn_inter_arrival_time"], self.cfg["mean_mining_time"],peer_type,self.cfg["mining_fee"],self,genesis_block))
         for peer in self.peer_list:
             idx = peer.idx
             conns = list(np.array(self.peer_list)[graph[idx]])
@@ -86,12 +89,16 @@ class Simulator:
         self.event_queue[self.current_time] = initial_events
         
     def run_world(self):
+        iteration=1
         while self.current_time <= self.cfg["stop_time"]:
             for event in self.event_queue[self.current_time]:
                 event.execute_event()
             self.total_events+=len(self.event_queue[self.current_time])
             self.event_queue.pop(self.current_time)
             print("Executed all events at time {}".format(self.current_time))
+            if iteration%100==0:
+                print("Events Completed = {}".format(self.total_events))
+            iteration+=1
             try:
                 self.current_time = min(self.event_queue)
             except:
@@ -105,11 +112,33 @@ class Simulator:
         self.initialise_event_queue()
         self.run_world()
         
+    def show_txns(self):
+        print("Transactions :")
+        for peer in self.peer_list:
+            print("Peer ID {} : {}".format(peer.idx,peer.total_txns))
+
+    def show_blocks(self):
+        print("Blocks :")
+        for peer in self.peer_list:
+            print("Peer ID {} : {}".format(peer.idx,peer.total_blocks))
+    
+    def show_peer_graph(self):
+        graph = nx.DiGraph()
+        for i in range(self.cfg["num_peers"]):
+            graph.add_node(i,status="peer")
+        for i in range(self.cfg["num_peers"]):
+            for x in self.peer_graph[i]:
+                graph.add_edge(i,x)
+        nx.draw_networkx(graph, with_labels=False, node_size=10, width=0.5, arrowsize=5)
+        plt.savefig('p2p_graph.png', dpi=300, bbox_inches='tight')
+        plt.show()
+        
+
 
 
 class Peer:
 
-    def __init__(self, idx, txn_inter_arrival_mean, mean_mining_time, peer_type, mining_fee, simulator):
+    def __init__(self, idx, txn_inter_arrival_mean, mean_mining_time, peer_type, mining_fee, simulator, genesis_block):
         ## idx is the index of the peer 
         ## Type here means fast or slow
         self.idx = idx 
@@ -120,11 +149,13 @@ class Peer:
         self.seen_txns = set()
         self.pending_blocks = []
         self.simulator = simulator
-        self.blocktree = [Block(None,None,None,None,True)]
+        self.blocktree = [genesis_block]
         self.next_block_creation_event = None ## Time at which our next block will be created
         self.current_chain_end = self.blocktree[0]
         self.mining_fee = mining_fee
         self.all_received_blocks=set()
+        self.total_blocks=0
+        self.total_txns=0
 
     def initialise_neighbours(self, neighbours):
         self.neighbours = {nei : set() for nei in neighbours} ## dict of peers : msg sent from us to them
@@ -133,7 +164,7 @@ class Peer:
         for neighbour, sent in self.neighbours.items():
             if msg not in sent and msg not in neighbour.neighbours[self]:
                 latency = self.simulator.calc_latency(self.peer_type, neighbour.peer_type, msg.size,self.simulator.rho[self.idx,neighbour.idx])
-                receiving_time = round(self.simulator.current_time + latency)
+                receiving_time = round(self.simulator.current_time + latency,2)
                 if isinstance(msg, Transaction):
                     func = neighbour.receive_transaction
                     args = {"txn" : msg}
@@ -141,6 +172,7 @@ class Peer:
                     func = neighbour.receive_block
                     args = {"block" : msg}
                 self.simulator.add_event(Event(func,args), receiving_time)
+                sent.add(msg)
         
     def create_transaction(self, args):
         # Samples from the exponential distribution
@@ -156,7 +188,8 @@ class Peer:
         new_txn = Transaction(txn_id, self.idx, idy, coins)
         self.pending_txns.add(new_txn)
         self.broadcast(new_txn)
-        next_txn_time = round(self.simulator.current_time+np.random.exponential(self.Ttx))
+        self.total_txns+=1
+        next_txn_time = round(self.simulator.current_time+np.random.exponential(self.Ttx),2)
         create_txn_event = Event(self.create_transaction,{})
         self.simulator.add_event(create_txn_event, next_txn_time)
 
@@ -174,8 +207,9 @@ class Peer:
                 break
         blkid = uuid1()
         args = {"block": Block(blkid, self.current_chain_end, curr_block_txns, self.idx, False)}
-        creation_time = round(self.simulator.current_time + np.random.exponential(self.mean_mining_time))
-        block_create_event = Event(self.create_block,args) 
+        creation_time = round(self.simulator.current_time + np.random.exponential(self.mean_mining_time),2)
+        block_create_event = Event(self.create_block,args)
+        self.next_block_creation_event = block_create_event 
         self.simulator.add_event(block_create_event, creation_time)
         
 
@@ -189,7 +223,9 @@ class Peer:
         self.pending_txns -= set(block.txns)
         self.seen_txns |= set(block.txns)
         self.broadcast(block)
+        self.total_blocks+=1
         self.mine_block()
+        print("Block created at time {} with id : {} by Peer ID : {}".format(self.simulator.current_time,block.blkid,self.idx))
     
     def start_mining(self,args):
         self.mine_block()
@@ -223,6 +259,7 @@ class Peer:
         return checkpoint
 
     def receive_transaction(self, args):
+        # print("Received Transaction at Peer ID : {}".format(self.idx))
         txn = args["txn"]
         self.broadcast(txn)
         if txn not in self.seen_txns:
@@ -245,6 +282,7 @@ class Peer:
         return max_chain_length_block
 
     def receive_block(self, args):
+        # print("Received block at Peer ID : {}".format(self.idx))
         block = args["block"]
         if block in self.all_received_blocks:
             return
@@ -256,11 +294,12 @@ class Peer:
             checkpoint = (block.parent).checkpoint.copy()
             checkpoint = self.get_new_checkpoint(checkpoint, block.txns)
             if checkpoint:
-                # broadcast here 
+                self.broadcast(block)
                 block.store_checkpoint(checkpoint)
                 self.blocktree.append(block)
                 if block.parent == self.current_chain_end:
-                    self.next_block_creation_event.execute = False
+                    if self.next_block_creation_event is not None:
+                        self.next_block_creation_event.execute = False
                     self.seen_txns |= set(block.txns)
                     self.pending_txns -= set(block.txns)
                     self.current_chain_end = block
@@ -276,7 +315,8 @@ class Peer:
                 else:
                     temp_chain_end=self.add_pending_blocks(block)
                     if temp_chain_end.chain_length > self.current_chain_end.chain_length:
-                        self.next_block_creation_event.execute = False
+                        if self.next_block_creation_event is not None:
+                            self.next_block_creation_event.execute = False
                         pointer = temp_chain_end
                         self.seen_txns = set()
                         while pointer.blkid != "GENESIS":
@@ -285,7 +325,78 @@ class Peer:
                         self.pending_txns -= self.seen_txns
                         self.current_chain_end = temp_chain_end
                         self.mine_block()
-                
+    
+    def get_stats(self):
+        blocks_per_peer = [0]*(self.simulator.cfg["num_peers"])
+        cur_block = self.current_chain_end
+        while cur_block.blkid!="GENESIS":
+            blocks_per_peer[cur_block.creator_id]+=1
+            cur_block=cur_block.parent
+        print(blocks_per_peer)
+        return blocks_per_peer
+        
+
+    def show_blocktree(self):  
+        tree = nx.DiGraph()  
+        for block in self.blocktree:
+            tree.add_node(block.blkid,status="Branch_block")
+        for block in self.blocktree:
+            if block.blkid!="GENESIS":
+                tree.add_edge(block.blkid,block.parent.blkid)
+        cur_block = self.current_chain_end
+        while cur_block.blkid!="GENESIS":
+            tree.nodes[cur_block.blkid]["status"] = "Longest_chain_block"
+            cur_block = cur_block.parent
+        tree.nodes["GENESIS"]["status"] = "GENESIS_block"
+        node_color = []
+        genesis_color, longest_chain_color, branch_color = 'yellow', 'red', 'blue'
+        for node in tree.nodes(data=True):
+            if 'Branch_block' == node[1]['status']:
+                node_color.append(branch_color)
+            elif 'Longest_chain_block' == node[1]['status']:
+                node_color.append(longest_chain_color)
+            elif 'GENESIS_block' == node[1]['status']:
+                node_color.append(genesis_color)
+        nx.draw_networkx(tree, with_labels=False, node_size=10, node_color=node_color, width=0.5, arrowsize=5)
+        genesis_patch = mpatches.Patch(color=genesis_color, label='Genesis block')
+        longest_patch = mpatches.Patch(color=longest_chain_color, label='Longest Chain block')
+        branch_patch = mpatches.Patch(color=branch_color, label='Branch block')
+        plt.legend(handles=[genesis_patch, longest_patch, branch_patch], loc="upper right")        
+        plt.savefig('blockchain_{}.png'.format(self.idx), dpi=300, bbox_inches='tight')
+        plt.show()
+
+    def show_fraction_of_chain(self):
+        blocks_per_peer = self.get_stats()
+        y = [num/self.current_chain_end.chain_length for num in blocks_per_peer]
+        x = list(range(self.simulator.cfg["num_peers"]))
+        fig = plt.figure(figsize = (10, 5))
+        plt.bar(x, y, color ='blue',width = 0.4)
+        plt.xticks(x)
+        plt.xlabel("Peer ID")
+        plt.ylabel("Fraction of Longest chain")
+        plt.title("Fraction of longest chain produced per peer")
+        plt.show()
+
+    def show_fraction_of_total_blocks(self):
+        blocks_per_peer = self.get_stats()
+        y=[]
+        for i, num in enumerate(blocks_per_peer):
+            blocks_produced = self.simulator.peer_list[i].total_blocks
+            if blocks_produced!=0:
+                y.append(num/blocks_produced)
+            else:
+                y.append(0)
+        x = list(range(self.simulator.cfg["num_peers"]))
+        fig = plt.figure(figsize = (10, 5))
+        plt.bar(x, y, color ='blue',width = 0.4)
+        plt.xticks(x)
+        plt.xlabel("Peer ID")
+        plt.ylabel("Fraction of total blocks")
+        plt.title("Fraction of Total blocks that went into Longest chain per peer")
+        plt.show()
+
+
+
 class Block:
 
     def __init__(self, blkid, parent, list_of_transactions, gen_peer_id, genesis_block):
@@ -337,5 +448,15 @@ if __name__=="__main__":
     args = parser.parse_args()
     simul = Simulator(args.config)
     simul.start_world()
+    simul.show_txns()
+    simul.show_blocks()
+    simul.show_peer_graph()
+    for i in range(10):
+        simul.peer_list[i].show_blocktree()
+        simul.peer_list[i].show_fraction_of_chain()
+        simul.peer_list[i].show_fraction_of_total_blocks()
+    
+
+
     
 
