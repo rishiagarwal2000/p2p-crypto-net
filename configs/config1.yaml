@@ -6,6 +6,16 @@ high_cij_val : 100000
 dij_cij_factor : 96
 slow_fraction : 0
 txn_inter_arrival_time : 6000
-mean_mining_time : 30000
+mean_mining_time : 
+  - 30000
+  - 20000
+  - 40000
+  - 50000
+  - 30000
+  - 60000
+  - 30000
+  - 40000
+  - 40000
+  - 70000
 mining_fee : 20
-stop_time : 900000
+max_events : 80000

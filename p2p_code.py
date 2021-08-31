@@ -1,11 +1,21 @@
 import numpy as np
 import yaml 
-import heapq 
+from queue import PriorityQueue
 from uuid import uuid1
 import argparse
 import networkx as nx
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
+
+class PriorityEntry(object):
+
+    def __init__(self, priority, data):
+        self.data = data
+        self.priority = priority
+
+    def __lt__(self, other):
+        return self.priority < other.priority
+
 """
 Notes : 
 
@@ -28,7 +38,7 @@ class Simulator:
         ## Must initialise all fields such as graph for the network and peers
         with open(cfg_file,'r') as fp:
             self.cfg = yaml.safe_load(fp) 
-        self.event_queue = {}
+        self.event_queue = PriorityQueue(0)
         self.current_time = 0
         self.rho = np.random.uniform(self.cfg["low_rho"],self.cfg["high_rho"],size=(self.cfg["num_peers"],self.cfg["num_peers"]))
         self.total_events = 0
@@ -68,43 +78,32 @@ class Simulator:
         self.peer_graph = graph
         self.peer_list=[]
         for idx, peer_type in peer_types:
-            self.peer_list.append(Peer(idx, self.cfg["txn_inter_arrival_time"], self.cfg["mean_mining_time"],peer_type,self.cfg["mining_fee"],self,genesis_block))
+            self.peer_list.append(Peer(idx, self.cfg["txn_inter_arrival_time"], self.cfg["mean_mining_time"][idx],peer_type,self.cfg["mining_fee"],self,genesis_block))
         for peer in self.peer_list:
             idx = peer.idx
             conns = list(np.array(self.peer_list)[graph[idx]])
             peer.initialise_neighbours(conns)
 
     def add_event(self,event,time):
-        if time in self.event_queue:
-            (self.event_queue[time]).append(event)
-        else:
-            self.event_queue[time] = [event]
+        self.event_queue.put(PriorityEntry(time,event))
 
     def initialise_event_queue(self):
         initial_events = []
         for peer in self.peer_list:
             mining_event = Event(peer.start_mining, None)
             txn_event = Event(peer.create_transaction, None)
-            initial_events+=[mining_event, txn_event]
-        self.event_queue[self.current_time] = initial_events
+            self.add_event(mining_event,self.current_time)
+            self.add_event(txn_event,self.current_time)
         
     def run_world(self):
-        iteration=1
-        while self.current_time <= self.cfg["stop_time"]:
-            for event in self.event_queue[self.current_time]:
-                event.execute_event()
-            self.total_events+=len(self.event_queue[self.current_time])
-            self.event_queue.pop(self.current_time)
-            print("Executed all events at time {}".format(self.current_time))
-            if iteration%100==0:
-                print("Events Completed = {}".format(self.total_events))
-            iteration+=1
-            try:
-                self.current_time = min(self.event_queue)
-            except:
-                break
-        ## Final graph calculations etc
-        print("Simulation over\nTotal events executed = {}".format(self.total_events))
+        completed_events=0
+        while (not self.event_queue.empty()) and completed_events < self.cfg["max_events"]:
+            entry = self.event_queue.get()
+            self.current_time = entry.priority
+            entry.data.execute_event()
+            completed_events+=1
+            print(completed_events)
+        print("Simulation is over with total {} events executed".format(completed_events))
 
 
     def start_world(self):
@@ -332,7 +331,7 @@ class Peer:
         while cur_block.blkid!="GENESIS":
             blocks_per_peer[cur_block.creator_id]+=1
             cur_block=cur_block.parent
-        print(blocks_per_peer)
+        # print(blocks_per_peer)
         return blocks_per_peer
         
 
@@ -367,6 +366,7 @@ class Peer:
 
     def show_fraction_of_chain(self):
         blocks_per_peer = self.get_stats()
+        print(blocks_per_peer)
         y = [num/self.current_chain_end.chain_length for num in blocks_per_peer]
         x = list(range(self.simulator.cfg["num_peers"]))
         fig = plt.figure(figsize = (10, 5))
