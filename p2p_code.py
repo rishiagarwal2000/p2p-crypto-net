@@ -6,6 +6,7 @@ import argparse
 import networkx as nx
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
+import os
 
 class PriorityEntry(object):
 
@@ -69,7 +70,8 @@ class Simulator:
     
     def create_peers(self):
         n = self.cfg["num_peers"]
-        genesis_block = Block(None,None,None,None,True)
+        self.genesis_block = Block(None,None,None,None,True)
+        self.alpha = 1/np.sum(np.reciprocal(self.cfg["mean_mining_time"],dtype=float))
         slow_peers = round(n*self.cfg["slow_fraction"])
         temp = list(np.random.permutation(n))
         peer_types=[(idx, "slow") for idx in temp[:slow_peers]]+[(idx, "fast") for idx in temp[slow_peers:]]
@@ -78,7 +80,7 @@ class Simulator:
         self.peer_graph = graph
         self.peer_list=[]
         for idx, peer_type in peer_types:
-            self.peer_list.append(Peer(idx, self.cfg["txn_inter_arrival_time"], self.cfg["mean_mining_time"][idx],peer_type,self.cfg["mining_fee"],self,genesis_block))
+            self.peer_list.append(Peer(idx, self.cfg["txn_inter_arrival_time"], self.cfg["mean_mining_time"][idx],peer_type,self.cfg["mining_fee"],self,self.genesis_block))
         for peer in self.peer_list:
             idx = peer.idx
             conns = list(np.array(self.peer_list)[graph[idx]])
@@ -155,6 +157,7 @@ class Peer:
         self.all_received_blocks=set()
         self.total_blocks=0
         self.total_txns=0
+        self.block_arrival_text=""
 
     def initialise_neighbours(self, neighbours):
         self.neighbours = {nei : set() for nei in neighbours} ## dict of peers : msg sent from us to them
@@ -286,6 +289,7 @@ class Peer:
         if block in self.all_received_blocks:
             return
         self.all_received_blocks.add(block)
+        self.block_arrival_text+="{} : {} ms\n\n".format(block.blkid,self.simulator.current_time)
         if block.parent not in self.blocktree:
             self.pending_blocks.append(block)
             self.broadcast(block)
@@ -368,9 +372,12 @@ class Peer:
         blocks_per_peer = self.get_stats()
         print(blocks_per_peer)
         y = [num/self.current_chain_end.chain_length for num in blocks_per_peer]
-        x = list(range(self.simulator.cfg["num_peers"]))
+        x = ["peer_{}\nHp:{}".format(idx,round(self.simulator.alpha/self.simulator.peer_list[idx].mean_mining_time,3)) for idx in range(self.simulator.cfg["num_peers"])]
         fig = plt.figure(figsize = (10, 5))
         plt.bar(x, y, color ='blue',width = 0.4)
+        for index, value in enumerate(y):
+            value = round(value,3)
+            plt.text(index , 1.03*value,'%f' % value, ha='center', va='bottom')
         plt.xticks(x)
         plt.xlabel("Peer ID")
         plt.ylabel("Fraction of Longest chain")
@@ -386,17 +393,53 @@ class Peer:
                 y.append(num/blocks_produced)
             else:
                 y.append(0)
-        x = list(range(self.simulator.cfg["num_peers"]))
+        x = ["peer_{}\nHp:{}".format(idx,round(self.simulator.alpha/self.simulator.peer_list[idx].mean_mining_time,3)) for idx in range(self.simulator.cfg["num_peers"])]
         fig = plt.figure(figsize = (10, 5))
         plt.bar(x, y, color ='blue',width = 0.4)
+        for index, value in enumerate(y):
+            value = round(value,3)
+            plt.text(index , 1.03*value,'%f' % value, ha='center', va='bottom')
         plt.xticks(x)
         plt.xlabel("Peer ID")
         plt.ylabel("Fraction of total blocks")
         plt.title("Fraction of Total blocks that went into Longest chain per peer")
         plt.show()
+    
+    def write_block_arrival_time(self):
+        folder = self.simulator.cfg["text_files_folder"]
+        if not os.path.isdir(folder):
+            os.mkdir(folder)
+        with open(os.path.join(folder,"peer_{}.txt".format(self.idx)),'w') as fp:
+            fp.write(self.block_arrival_text)
+    
+    def get_branch_lengths(self):
+        is_parent = {block : 0 for block in self.blocktree}
+        for block in self.blocktree:
+            if block!=self.simulator.genesis_block:
+                is_parent[block.parent]=1
+        longest_chain_idx = 0
+        y=[]
+        for block, val in is_parent.items():
+            if val==0:
+                y.append(block.chain_length)
+                if block == self.current_chain_end:
+                    longest_chain_idx = len(y)-1
+                
+        x=["SB_{}".format(i) for i in range(longest_chain_idx)]+["MB"]+["SB_{}".format(i) for i in range(longest_chain_idx,len(y)-1)]
+        fig = plt.figure(figsize = (10, 5))
+        plt.bar(x, y, color ='blue',width = 0.4)
+        for index, value in enumerate(y):
+            plt.text(index , 1.03*value,'%d' % int(value), ha='center', va='bottom')
+        plt.xticks(x)
+        plt.xlabel("Branches (SB : Side Branch ; MB : Main Branch)")
+        plt.ylabel("Length in number of blocks")
+        plt.title("Length of Blockchain branches")
+        plt.show()
 
 
 
+        
+            
 class Block:
 
     def __init__(self, blkid, parent, list_of_transactions, gen_peer_id, genesis_block):
@@ -451,10 +494,12 @@ if __name__=="__main__":
     simul.show_txns()
     simul.show_blocks()
     simul.show_peer_graph()
-    for i in range(10):
+    for i in range(simul.cfg["num_peers"]):
         simul.peer_list[i].show_blocktree()
         simul.peer_list[i].show_fraction_of_chain()
         simul.peer_list[i].show_fraction_of_total_blocks()
+        simul.peer_list[i].get_branch_lengths()
+        simul.peer_list[i].write_block_arrival_time()
     
 
 
