@@ -4,7 +4,7 @@ num_peers : 10
 slow_cij_val : 5000
 high_cij_val : 100000
 dij_cij_factor : 96
-slow_fraction : 0
+slow_fraction : 0.5
 txn_inter_arrival_time : 6000
 too_many_peers : False
 mean_mining_time : 

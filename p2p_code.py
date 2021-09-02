@@ -71,7 +71,10 @@ class Simulator:
     def create_peers(self):
         n = self.cfg["num_peers"]
         self.genesis_block = Block(None,None,None,None,True)
-        self.alpha = 1/np.sum(np.reciprocal(self.cfg["mean_mining_time"],dtype=float))
+        mining_times = self.cfg["mean_mining_time"]
+        if self.cfg["too_many_peers"]:
+            mining_times = [mining_times[0]+ i*((mining_times[1]-mining_times[0])/(n-1)) for i in range(n)]
+        self.alpha = 1/np.sum(np.reciprocal(mining_times,dtype=float))
         slow_peers = round(n*self.cfg["slow_fraction"])
         temp = list(np.random.permutation(n))
         peer_types=[(idx, "slow") for idx in temp[:slow_peers]]+[(idx, "fast") for idx in temp[slow_peers:]]
@@ -80,7 +83,7 @@ class Simulator:
         self.peer_graph = graph
         self.peer_list=[]
         for idx, peer_type in peer_types:
-            self.peer_list.append(Peer(idx, self.cfg["txn_inter_arrival_time"], self.cfg["mean_mining_time"][idx],peer_type,self.cfg["mining_fee"],self,self.genesis_block))
+            self.peer_list.append(Peer(idx, self.cfg["txn_inter_arrival_time"], mining_times[idx],peer_type,self.cfg["mining_fee"],self,self.genesis_block))
         for peer in self.peer_list:
             idx = peer.idx
             conns = list(np.array(self.peer_list)[graph[idx]])
@@ -158,6 +161,7 @@ class Peer:
         self.total_blocks=0
         self.total_txns=0
         self.block_arrival_text=""
+        self.blockchain_txns=0
 
     def initialise_neighbours(self, neighbours):
         self.neighbours = {nei : set() for nei in neighbours} ## dict of peers : msg sent from us to them
@@ -184,7 +188,7 @@ class Peer:
         idy = np.random.choice(current_peers)
         txn_id = uuid1()
         if self.idx in self.current_chain_end.checkpoint:
-            coins = np.random.uniform(0, self.current_chain_end.checkpoint[self.idx])
+            coins = np.random.uniform(0, self.current_chain_end.checkpoint[self.idx]/1000)
         else:
             coins = 0 ## COIN GENERATION
         new_txn = Transaction(txn_id, self.idx, idy, coins)
@@ -199,16 +203,16 @@ class Peer:
     def mine_block(self):
         coinbase_id = uuid1()
         coinbase = Transaction(coinbase_id,None,self.idx,self.mining_fee)
-        while True:
-            num_of_transactions = np.random.randint(0,min(1024,len(self.pending_txns)+1))
-            curr_block_txns = list(np.random.choice(list(self.pending_txns),size=num_of_transactions,replace=False))
-            curr_block_txns = [coinbase]+curr_block_txns
-            checkpoint = self.current_chain_end.checkpoint.copy()
-            checkpoint = self.get_new_checkpoint(checkpoint, curr_block_txns)
-            if checkpoint:
-                break
+        # while True:
+        num_of_transactions = np.random.randint(0,min(1024,len(self.pending_txns)+1))
+        curr_block_txns = list(np.random.choice(list(self.pending_txns),size=num_of_transactions,replace=False))
+        curr_block_txns = [coinbase]+curr_block_txns
+        checkpoint = self.current_chain_end.checkpoint.copy()
+        checkpoint, txn_idx = self.get_new_checkpoint(checkpoint, curr_block_txns,mining=True)
+        # if checkpoint:
+        #     break
         blkid = uuid1()
-        args = {"block": Block(blkid, self.current_chain_end, curr_block_txns, self.idx, False)}
+        args = {"block": Block(blkid, self.current_chain_end, curr_block_txns[:txn_idx], self.idx, False)}
         creation_time = round(self.simulator.current_time + np.random.exponential(self.mean_mining_time),2)
         block_create_event = Event(self.create_block,args)
         self.next_block_creation_event = block_create_event 
@@ -221,6 +225,7 @@ class Peer:
         checkpoint = self.get_new_checkpoint(checkpoint, block.txns)
         block.store_checkpoint(checkpoint)
         self.blocktree.append(block)
+        self.blockchain_txns+=len(block.txns)
         self.current_chain_end = block
         self.pending_txns -= set(block.txns)
         self.seen_txns |= set(block.txns)
@@ -253,11 +258,19 @@ class Peer:
             
         return checkpoint
         
-    def get_new_checkpoint(self, checkpoint, txns):
+    def get_new_checkpoint(self, checkpoint, txns, mining=False):
+        checkpoint = {}
+        txn_idx = 0
         for txn in txns:
+            temp_checkpoint = checkpoint.copy()
             checkpoint = self.update_checkpoint(txn, checkpoint)
             if checkpoint is None:
+                if mining:
+                    return temp_checkpoint, txn_idx
                 return None
+            txn_idx+=1
+        if mining:
+            return checkpoint, txn_idx
         return checkpoint
 
     def receive_transaction(self, args):
@@ -277,6 +290,7 @@ class Peer:
                 if checkpoint:
                     block.store_checkpoint(checkpoint)
                     self.blocktree.append(block)
+                    self.blockchain_txns+=len(block.txns)
                     if block.chain_length > max_chain_length_block.chain_length:
                         max_chain_length_block = block
                 remove_blocks.add(block)
@@ -300,6 +314,7 @@ class Peer:
                 self.broadcast(block)
                 block.store_checkpoint(checkpoint)
                 self.blocktree.append(block)
+                self.blockchain_txns+=len(block.txns)
                 if block.parent == self.current_chain_end:
                     if self.next_block_creation_event is not None:
                         self.next_block_creation_event.execute = False
@@ -372,7 +387,7 @@ class Peer:
         blocks_per_peer = self.get_stats()
         print(blocks_per_peer)
         y = [num/self.current_chain_end.chain_length for num in blocks_per_peer]
-        x = ["peer_{}\nHp:{}".format(idx,round(self.simulator.alpha/self.simulator.peer_list[idx].mean_mining_time,3)) for idx in range(self.simulator.cfg["num_peers"])]
+        x = ["peer_{}\nHp:{}\n{}".format(idx,round(self.simulator.alpha/self.simulator.peer_list[idx].mean_mining_time,3),self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg["num_peers"])]
         fig = plt.figure(figsize = (10, 5))
         plt.bar(x, y, color ='blue',width = 0.4)
         for index, value in enumerate(y):
@@ -393,7 +408,7 @@ class Peer:
                 y.append(num/blocks_produced)
             else:
                 y.append(0)
-        x = ["peer_{}\nHp:{}".format(idx,round(self.simulator.alpha/self.simulator.peer_list[idx].mean_mining_time,3)) for idx in range(self.simulator.cfg["num_peers"])]
+        x = ["peer_{}\nHp:{}\n{}".format(idx,round(self.simulator.alpha/self.simulator.peer_list[idx].mean_mining_time,3),self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg["num_peers"])]
         fig = plt.figure(figsize = (10, 5))
         plt.bar(x, y, color ='blue',width = 0.4)
         for index, value in enumerate(y):
@@ -435,6 +450,7 @@ class Peer:
         plt.ylabel("Length in number of blocks")
         plt.title("Length of Blockchain branches")
         plt.show()
+        print("Average Number of Transactions per block in entire blockchain for Peer ID {} : {}".format(self.idx,self.blockchain_txns/len(self.blocktree)))
 
 
 
