@@ -162,6 +162,7 @@ class Peer:
         self.total_txns=0
         self.block_arrival_text=""
         self.blockchain_txns=0
+        self.pending_txn_max_size=0
 
     def initialise_neighbours(self, neighbours):
         self.neighbours = {nei : set() for nei in neighbours} ## dict of peers : msg sent from us to them
@@ -188,11 +189,12 @@ class Peer:
         idy = np.random.choice(current_peers)
         txn_id = uuid1()
         if self.idx in self.current_chain_end.checkpoint:
-            coins = np.random.uniform(0, self.current_chain_end.checkpoint[self.idx]/1000)
+            coins = np.random.uniform(0, self.current_chain_end.checkpoint[self.idx]/100000)
         else:
             coins = 0 ## COIN GENERATION
         new_txn = Transaction(txn_id, self.idx, idy, coins)
         self.pending_txns.add(new_txn)
+        self.pending_txn_max_size = max(self.pending_txn_max_size,len(self.pending_txns))
         self.broadcast(new_txn)
         self.total_txns+=1
         next_txn_time = round(self.simulator.current_time+np.random.exponential(self.Ttx),2)
@@ -279,6 +281,7 @@ class Peer:
         self.broadcast(txn)
         if txn not in self.seen_txns:
             self.pending_txns.add(txn)
+            self.pending_txn_max_size = max(self.pending_txn_max_size,len(self.pending_txns))
     
     def add_pending_blocks(self, new_block):
         remove_blocks = set()
@@ -451,7 +454,7 @@ class Peer:
         plt.title("Length of Blockchain branches")
         plt.show()
         print("Average Number of Transactions per block in entire blockchain for Peer ID {} : {}".format(self.idx,self.blockchain_txns/len(self.blocktree)))
-
+        print("Max Size of pending txn pool for Peer ID {} : {}".format(self.idx,self.pending_txn_max_size))
 
 
         
