@@ -7,6 +7,7 @@ import networkx as nx
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import os
+import gc
 
 class PriorityEntry(object):
 
@@ -70,7 +71,7 @@ class Simulator:
     
     def create_peers(self):
         n = self.cfg["num_peers"]
-        self.genesis_block = Block(None,None,None,None,True)
+        self.genesis_block = Block(None,None,None,None,True,self.cfg["num_peers"])
         mining_times = self.cfg["mean_mining_time"]
         if self.cfg["too_many_peers"]:
             mining_times = [mining_times[0]+ i*((mining_times[1]-mining_times[0])/(n-1)) for i in range(n)]
@@ -108,7 +109,7 @@ class Simulator:
             entry.data.execute_event()
             completed_events+=1
             print(completed_events)
-        print("Simulation is over with total {} events executed".format(completed_events))
+        print("Simulation is over with total {} events executed at simulation time {} sec".format(completed_events,self.current_time/1000))
 
 
     def start_world(self):
@@ -163,6 +164,8 @@ class Peer:
         self.block_arrival_text=""
         self.blockchain_txns=0
         self.pending_txn_max_size=0
+        self.pending_txn_option_size = 0
+        self.number_of_mines=0
 
     def initialise_neighbours(self, neighbours):
         self.neighbours = {nei : set() for nei in neighbours} ## dict of peers : msg sent from us to them
@@ -192,6 +195,7 @@ class Peer:
             coins = np.random.uniform(0, self.current_chain_end.checkpoint[self.idx]/100000)
         else:
             coins = 0 ## COIN GENERATION
+        # coins=0
         new_txn = Transaction(txn_id, self.idx, idy, coins)
         self.pending_txns.add(new_txn)
         self.pending_txn_max_size = max(self.pending_txn_max_size,len(self.pending_txns))
@@ -206,7 +210,9 @@ class Peer:
         coinbase_id = uuid1()
         coinbase = Transaction(coinbase_id,None,self.idx,self.mining_fee)
         # while True:
-        num_of_transactions = np.random.randint(0,min(1024,len(self.pending_txns)+1))
+        num_of_transactions = min(1024,len(self.pending_txns)+1)-1#np.random.randint(0,min(1024,len(self.pending_txns)+1))
+        self.pending_txn_option_size +=len(self.pending_txns)
+        self.number_of_mines+=1
         curr_block_txns = list(np.random.choice(list(self.pending_txns),size=num_of_transactions,replace=False))
         curr_block_txns = [coinbase]+curr_block_txns
         checkpoint = self.current_chain_end.checkpoint.copy()
@@ -214,7 +220,7 @@ class Peer:
         # if checkpoint:
         #     break
         blkid = uuid1()
-        args = {"block": Block(blkid, self.current_chain_end, curr_block_txns[:txn_idx], self.idx, False)}
+        args = {"block": Block(blkid, self.current_chain_end, curr_block_txns[:txn_idx], self.idx, False,self.simulator.cfg["num_peers"])}
         creation_time = round(self.simulator.current_time + np.random.exponential(self.mean_mining_time),2)
         block_create_event = Event(self.create_block,args)
         self.next_block_creation_event = block_create_event 
@@ -230,7 +236,7 @@ class Peer:
         self.blockchain_txns+=len(block.txns)
         self.current_chain_end = block
         self.pending_txns -= set(block.txns)
-        self.seen_txns |= set(block.txns)
+        # self.seen_txns |= set(block.txns)
         self.broadcast(block)
         self.total_blocks+=1
         self.mine_block()
@@ -261,7 +267,6 @@ class Peer:
         return checkpoint
         
     def get_new_checkpoint(self, checkpoint, txns, mining=False):
-        checkpoint = {}
         txn_idx = 0
         for txn in txns:
             temp_checkpoint = checkpoint.copy()
@@ -279,25 +284,71 @@ class Peer:
         # print("Received Transaction at Peer ID : {}".format(self.idx))
         txn = args["txn"]
         self.broadcast(txn)
-        if txn not in self.seen_txns:
+        if txn not in self.current_chain_end.seen_txns:
             self.pending_txns.add(txn)
             self.pending_txn_max_size = max(self.pending_txn_max_size,len(self.pending_txns))
     
     def add_pending_blocks(self, new_block):
-        remove_blocks = set()
+        remove_blocks = {}
+        foliage = set(self.pending_blocks).add(new_block)
         max_chain_length_block=new_block
-        for block in self.pending_blocks:
-            if block.parent in self.blocktree:
-                checkpoint = (block.parent).checkpoint.copy()
-                checkpoint = self.get_new_checkpoint(checkpoint, block.txns)
-                if checkpoint:
-                    block.store_checkpoint(checkpoint)
-                    self.blocktree.append(block)
-                    self.blockchain_txns+=len(block.txns)
-                    if block.chain_length > max_chain_length_block.chain_length:
-                        max_chain_length_block = block
-                remove_blocks.add(block)
-        self.pending_blocks = list(set(self.pending_blocks) - remove_blocks)
+        check_blocks = {new_block}
+        visited_adding = [(0,0)]*len(self.pending_blocks)
+        blk_idx = {blk : i for i, blk in enumerate(self.pending_blocks)}
+        p_idx = 0
+        while p_idx<len(self.pending_blocks):
+            if visited_adding[p_idx][0]!=1:
+                temp=[]
+                judgement = None 
+                cur_block = self.pending_blocks[p_idx]
+                invalid = False
+                while True:
+                    if cur_block==new_block:
+                        judgement=True
+                        break
+                    elif visited_adding[blk_idx[cur_block]]==(1,0):
+                        judgement=False
+                        break
+                    elif visited_adding[blk_idx[cur_block]]==(1,-1):
+                        judgement=True 
+                        invalid=True
+                        break
+                    elif visited_adding[blk_idx[cur_block]]==(1,1):
+                        judgement=True
+                        break
+                    elif cur_block.parent in foliage:
+                        temp.append(blk_idx[cur_block])
+                        cur_block = cur_block.parent
+                    else:
+                        temp.append(blk_idx[cur_block])
+                        judgement = False 
+                        break
+                if judgement:
+                    for idx in temp[::-1]:
+                        if invalid:
+                            visited_adding[idx] = (1,-1)
+                            continue
+                        blk = self.pending_blocks[idx]
+                        checkpoint = blk.parent.checkpoint.copy()
+                        checkpoint = self.get_new_checkpoint(checkpoint,blk.txns)
+                        if checkpoint:
+                            blk.store_checkpoint(checkpoint)
+                            visited_adding[idx] = (1,1)
+                            if blk.chain_length > max_chain_length_block.chain_length:
+                                max_chain_length_block = blk
+                        else:
+                            visited_adding[idx] = (1,-1)
+                            invalid=True
+                else:
+                    for idx in temp:
+                        visited_adding[idx]=(1,0)
+            p_idx+=1
+        
+        for i, dec in enumerate(visited_adding):
+            if dec==(1,1):
+                self.blocktree.append(self.pending_blocks[i])
+                (self.pending_blocks[i]).parent.seen_its_child(self.idx)
+        self.pending_blocks = [self.pending_blocks[i] for i, dec in enumerate(visited_adding) if dec == (1,0)]
         return max_chain_length_block
 
     def receive_block(self, args):
@@ -318,10 +369,11 @@ class Peer:
                 block.store_checkpoint(checkpoint)
                 self.blocktree.append(block)
                 self.blockchain_txns+=len(block.txns)
+                block.parent.seen_its_child(self.idx)
                 if block.parent == self.current_chain_end:
                     if self.next_block_creation_event is not None:
                         self.next_block_creation_event.execute = False
-                    self.seen_txns |= set(block.txns)
+                    # self.seen_txns |= set(block.txns)
                     self.pending_txns -= set(block.txns)
                     self.current_chain_end = block
                     temp_chain_end=self.add_pending_blocks(block)
@@ -329,7 +381,7 @@ class Peer:
                         pointer = temp_chain_end
                         while pointer != self.current_chain_end:
                             self.pending_txns -= set(pointer.txns)
-                            self.seen_txns |= set(pointer.txns)
+                            # self.seen_txns |= set(pointer.txns)
                             pointer = pointer.parent
                     self.current_chain_end = temp_chain_end
                     self.mine_block()
@@ -338,12 +390,7 @@ class Peer:
                     if temp_chain_end.chain_length > self.current_chain_end.chain_length:
                         if self.next_block_creation_event is not None:
                             self.next_block_creation_event.execute = False
-                        pointer = temp_chain_end
-                        self.seen_txns = set()
-                        while pointer.blkid != "GENESIS":
-                            self.seen_txns |= set(pointer.txns)
-                            pointer = pointer.parent
-                        self.pending_txns -= self.seen_txns
+                        self.pending_txns -= temp_chain_end.seen_txns
                         self.current_chain_end = temp_chain_end
                         self.mine_block()
     
@@ -388,7 +435,6 @@ class Peer:
 
     def show_fraction_of_chain(self):
         blocks_per_peer = self.get_stats()
-        print(blocks_per_peer)
         y = [num/self.current_chain_end.chain_length for num in blocks_per_peer]
         x = ["peer_{}\nHp:{}\n{}".format(idx,round(self.simulator.alpha/self.simulator.peer_list[idx].mean_mining_time,3),self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg["num_peers"])]
         fig = plt.figure(figsize = (10, 5))
@@ -428,7 +474,7 @@ class Peer:
         if not os.path.isdir(folder):
             os.mkdir(folder)
         with open(os.path.join(folder,"peer_{}.txt".format(self.idx)),'w') as fp:
-            fp.write(self.block_arrival_text)
+            fp.write("Peer ID : {}\nMean Block Creation Time : {} ms\n\n\n".format(self.idx,self.simulator.alpha)+self.block_arrival_text)
     
     def get_branch_lengths(self):
         is_parent = {block : 0 for block in self.blocktree}
@@ -453,23 +499,33 @@ class Peer:
         plt.ylabel("Length in number of blocks")
         plt.title("Length of Blockchain branches")
         plt.show()
+        
+    def show_final_stats(self):
+        print("".join(['*']*30)+"Peer ID {}".format(self.idx)+"".join(['*']*30))
+        self.show_blocktree()
+        self.show_fraction_of_chain() 
+        self.show_fraction_of_total_blocks()
+        self.get_branch_lengths()
+        self.write_block_arrival_time()
         print("Average Number of Transactions per block in entire blockchain for Peer ID {} : {}".format(self.idx,self.blockchain_txns/len(self.blocktree)))
         print("Max Size of pending txn pool for Peer ID {} : {}".format(self.idx,self.pending_txn_max_size))
-
+        print("Average size of transaction pool at time of choosing txns is {}\n".format(self.pending_txn_option_size/self.number_of_mines))
 
         
             
 class Block:
 
-    def __init__(self, blkid, parent, list_of_transactions, gen_peer_id, genesis_block):
+    def __init__(self, blkid, parent, list_of_transactions, gen_peer_id, genesis_block, number_of_peers):
         ## Initialize block
         ## Remember to store length of current chain upto this block as well
         ## One of the transactions will be the coinbase
         if genesis_block:
             self.blkid = "GENESIS"
-            self.checkpoint = {}
+            self.checkpoint = {i : 0 for i in range(number_of_peers)}
             self.chain_length = 1
             self.size = 1
+            self.received_by = 0
+            self.seen_txns = set()
         else:
             self.parent  = parent 
             self.parent_id = self.parent.blkid
@@ -478,10 +534,23 @@ class Block:
             self.creator_id = gen_peer_id
             self.chain_length = self.parent.chain_length + 1
             self.size = len(self.txns)
+            self.received_by = 1
+            self.seen_txns = self.parent.seen_txns | set(self.txns)
+        self.peers_who_saw_child = [False]*number_of_peers
+        self.sum_chpeers = 0
 
     def store_checkpoint(self, checkpoint):
         self.checkpoint = checkpoint
-        
+    
+    def seen_its_child(self, peer_idx):
+        self.sum_chpeers += (self.peers_who_saw_child[peer_idx] ^ True)
+        self.peers_who_saw_child[peer_idx] = True
+        if self.sum_chpeers == len(self.peers_who_saw_child):
+            try:
+                del self.seen_txns
+                gc.collect()
+            except:
+                pass
 
 class Event:
 
@@ -514,11 +583,8 @@ if __name__=="__main__":
     simul.show_blocks()
     simul.show_peer_graph()
     for i in range(simul.cfg["num_peers"]):
-        simul.peer_list[i].show_blocktree()
-        simul.peer_list[i].show_fraction_of_chain()
-        simul.peer_list[i].show_fraction_of_total_blocks()
-        simul.peer_list[i].get_branch_lengths()
-        simul.peer_list[i].write_block_arrival_time()
+        simul.peer_list[i].show_final_stats()
+        
     
 
 

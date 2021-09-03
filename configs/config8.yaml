@@ -8,8 +8,8 @@ slow_fraction : 0
 txn_inter_arrival_time : 100000
 too_many_peers : True
 mean_mining_time : 
-  - 300000
-  - 300000
-mining_fee : 20
+  - 600000
+  - 600000
+mining_fee : 1
 max_events : 500000
 text_files_folder : "Block_Arrivals"
