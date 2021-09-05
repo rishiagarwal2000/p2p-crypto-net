@@ -1,0 +1,15 @@
+low_rho : 10
+high_rho : 500
+num_peers : 10
+slow_cij_val : 5000
+high_cij_val : 100000
+dij_cij_factor : 96
+slow_fraction : 0
+txn_inter_arrival_time : 30000
+too_many_peers : True
+mean_mining_time : 
+  - 300000
+  - 300000
+mining_fee : 20
+max_events : 140000
+text_files_folder : "Block_Arrivals"
