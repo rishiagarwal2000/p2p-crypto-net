@@ -1,0 +1,24 @@
+low_rho : 10
+high_rho : 500
+num_peers : 10
+slow_cij_val : 5000
+high_cij_val : 100000
+dij_cij_factor : 96
+slow_fraction : 0
+babasi_albert_m : 3
+txn_inter_arrival_time : 100000
+net_mean_mining_time : 600000
+hashing_fractions : 
+  - 0.04
+  - 0.04
+  - 0.04
+  - 0.04
+  - 0.04
+  - 0.16
+  - 0.16
+  - 0.16
+  - 0.16
+  - 0.16
+mining_fee : 20
+max_time : 300000000
+text_files_folder : "Block_Arrivals"

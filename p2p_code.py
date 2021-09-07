@@ -53,7 +53,7 @@ class Simulator:
         event_queue (PriorityQueue): A min PriorityQueue which stores PriorityEntry objects
         current_time (float): The time correspnding to the current event being executed
         rho (float): Numpy array containing delay times corresponding to speed of light propagation for every pair of peers
-        alpha (float): alpha/Tk gives fraction of hashing power for a peer where Tk is the mean mining time of the peer
+        hashing_fractions (list of float): Represents the hashing power fraction for each peer. Should sum up to 1
         genesis_block (Block): The genesis block that is supplied to every peer at the start of the simulation
         peer_graph (list of list of int): P2P network between peers stored in the format of adjacency lists using peer IDs
         peer_list (list of Peer): List of Peer objects representing peers in P2P network
@@ -90,7 +90,8 @@ class Simulator:
         
 
     def get_graph(self):
-        """Creates a random connected P2P graph between peers at the start of simulation
+        """Creates a random connected P2P graph between peers at the start of simulation. Graph created
+        is sampled uniformly from the set of all connected undirected graphs
         
         Args:
             None
@@ -102,7 +103,7 @@ class Simulator:
         n = self.cfg["num_peers"]
         perm = list(np.random.permutation(n))
         in_net = [perm[0]]
-        graph = [[]]*n
+        graph = [[] for i in range(n)]
         for peer_id in perm[1:]:
             num_connections = np.random.randint(1,len(in_net)+1)
             connections = list(np.random.choice(in_net, size = num_connections, replace = False))
@@ -111,7 +112,41 @@ class Simulator:
                 graph[conn].append(peer_id)
             in_net.append(peer_id)
         return graph
-    
+
+    def BA_model_graph(self):
+        """Creates a random connected P2P graph between peers at the start of simulation based on the 
+        Babasi-Albert model of Scale-free network
+        
+        Args:
+            None
+
+        Returns:
+            A list of list of int representing the graph in adjacency list format
+
+        """
+        np.random.seed(1)
+        n = self.cfg["num_peers"]
+        m = self.cfg["babasi_albert_m"]
+        assert m < n, "Babasi-Albert parameter 'm' needs to be strictly smaller than n. Instead got {}".format(m)
+        perm = list(np.random.permutation(n))
+        graph = [[] for i in range(n)]
+        for peer_id in perm[:m]:
+            graph[peer_id].append(perm[m])
+        graph[perm[m]] = perm[:m]
+        degrees = np.zeros(n,)
+        degrees[perm[:m]]+=1
+        degrees[perm[m]]=m 
+        total_deg = 2*m
+        for idx in range(m+1,n):
+            attachments=np.random.choice(perm[:idx],size=m,replace=False,p=degrees[perm[:idx]]/total_deg)
+            for peer_id in attachments:
+                graph[peer_id].append(perm[idx])
+            graph[perm[idx]] = list(attachments)
+            degrees[attachments]+=1
+            degrees[perm[idx]]=m
+            total_deg+=2*m
+        return graph
+
     def create_peers(self):
         """Creates, connects and initialises the peers 
 
@@ -124,15 +159,14 @@ class Simulator:
         """
         n = self.cfg["num_peers"]
         self.genesis_block = Block(None,None,None,None,True,self.cfg["num_peers"])
-        mining_times = self.cfg["mean_mining_time"]
-        if self.cfg["too_many_peers"]:
-            mining_times = [mining_times[0]+ i*((mining_times[1]-mining_times[0])/(n-1)) for i in range(n)]
-        self.alpha = 1/np.sum(np.reciprocal(mining_times,dtype=float))
+        self.hashing_fractions = self.cfg["hashing_fractions"]
+        assert np.sum(self.hashing_fractions)==1, "Hashing fractions for {} peers should sum to 1".format(n)
+        mining_times = [self.cfg["net_mean_mining_time"]/hf for hf in self.hashing_fractions]
         slow_peers = round(n*self.cfg["slow_fraction"])
         temp = list(np.random.permutation(n))
         peer_types=[(idx, "slow") for idx in temp[:slow_peers]]+[(idx, "fast") for idx in temp[slow_peers:]]
         peer_types.sort()
-        graph = self.get_graph()
+        graph = self.BA_model_graph()
         self.peer_graph = graph
         self.peer_list=[]
         for idx, peer_type in peer_types:
@@ -183,7 +217,7 @@ class Simulator:
 
         """
         completed_events=0
-        while (not self.event_queue.empty()) and completed_events < self.cfg["max_events"]:
+        while (not self.event_queue.empty()) and self.current_time < self.cfg["max_time"]:
             entry = self.event_queue.get()
             self.current_time = entry.priority
             entry.data.execute_event()
@@ -250,8 +284,8 @@ class Simulator:
         for i in range(self.cfg["num_peers"]):
             for x in self.peer_graph[i]:
                 graph.add_edge(i,x)
-        nx.draw_networkx(graph, with_labels=False, node_size=10, width=0.5, arrowsize=5)
-        plt.savefig('p2p_graph.png', dpi=300, bbox_inches='tight')
+        nx.draw_networkx(graph, with_labels=True, node_size=10, width=0.5, arrowsize=5)
+        # plt.savefig("p2p_graph_{}.png".format(os.path.basename(self.cfg_filename)), dpi=300, bbox_inches='tight')
         plt.show()
         
 class Peer:
@@ -397,7 +431,6 @@ class Peer:
         """
         coinbase_id = uuid1()
         coinbase = Transaction(coinbase_id,None,self.idx,self.mining_fee)
-        # while True:
         num_of_transactions = min(1024,len(self.pending_txns)+1)-1#np.random.randint(0,min(1024,len(self.pending_txns)+1))
         self.pending_txn_option_size +=len(self.pending_txns)
         self.number_of_mines+=1
@@ -539,7 +572,8 @@ class Peer:
             Amongst the newly added blocks, it returns the one with maximum chain length (or height) in the blockchain
 
         """
-        foliage = set(self.pending_blocks).add(new_block)
+        foliage = set(self.pending_blocks)
+        foliage.add(new_block)
         max_chain_length_block=new_block
         check_blocks = {new_block}
         visited_adding = [(0,0)]*len(self.pending_blocks)
@@ -631,7 +665,6 @@ class Peer:
                 if block.parent == self.current_chain_end:
                     if self.next_block_creation_event is not None:
                         self.next_block_creation_event.execute = False
-                    # self.seen_txns |= set(block.txns)
                     self.pending_txns -= set(block.txns)
                     self.current_chain_end = block
                     temp_chain_end=self.add_pending_blocks(block)
@@ -639,7 +672,6 @@ class Peer:
                         pointer = temp_chain_end
                         while pointer != self.current_chain_end:
                             self.pending_txns -= set(pointer.txns)
-                            # self.seen_txns |= set(pointer.txns)
                             pointer = pointer.parent
                     self.current_chain_end = temp_chain_end
                     self.mine_block()
@@ -705,7 +737,7 @@ class Peer:
         longest_patch = mpatches.Patch(color=longest_chain_color, label='Longest Chain block')
         branch_patch = mpatches.Patch(color=branch_color, label='Branch block')
         plt.legend(handles=[genesis_patch, longest_patch, branch_patch], loc="upper right")        
-        # plt.savefig('blockchain_{}.png'.format(self.idx), dpi=300, bbox_inches='tight')
+        # plt.savefig('blockchain_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
         plt.show()
 
     def show_fraction_of_chain(self):
@@ -721,7 +753,7 @@ class Peer:
         """
         blocks_per_peer = self.get_stats()
         y = [num/self.current_chain_end.chain_length for num in blocks_per_peer]
-        x = ["peer_{}\nHp:{}\n{}".format(idx,round(self.simulator.alpha/self.simulator.peer_list[idx].mean_mining_time,3),self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg["num_peers"])]
+        x = ["peer_{}\nHp:{}\n{}".format(idx,self.simulator.hashing_fractions[idx],self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg["num_peers"])]
         fig = plt.figure(figsize = (10, 5))
         plt.bar(x, y, color ='blue',width = 0.4)
         for index, value in enumerate(y):
@@ -731,6 +763,7 @@ class Peer:
         plt.xlabel("Peer ID")
         plt.ylabel("Fraction of Longest chain")
         plt.title("Fraction of longest chain produced per peer")
+        # plt.savefig('chain_fraction_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
         plt.show()
 
     def show_fraction_of_total_blocks(self):
@@ -752,7 +785,7 @@ class Peer:
                 y.append(num/blocks_produced)
             else:
                 y.append(0)
-        x = ["peer_{}\nHp:{}\n{}".format(idx,round(self.simulator.alpha/self.simulator.peer_list[idx].mean_mining_time,3),self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg["num_peers"])]
+        x = ["peer_{}\nHp:{}\n{}".format(idx,self.simulator.hashing_fractions[idx],self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg["num_peers"])]
         fig = plt.figure(figsize = (10, 5))
         plt.bar(x, y, color ='blue',width = 0.4)
         for index, value in enumerate(y):
@@ -762,6 +795,7 @@ class Peer:
         plt.xlabel("Peer ID")
         plt.ylabel("Fraction of total blocks")
         plt.title("Fraction of Total blocks that went into Longest chain per peer")
+        # plt.savefig('success_fraction_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
         plt.show()
     
     def write_block_arrival_time(self):
@@ -813,6 +847,7 @@ class Peer:
         plt.xlabel("Branches (SB : Side Branch ; MB : Main Branch)")
         plt.ylabel("Length in number of blocks")
         plt.title("Length of Blockchain branches")
+        # plt.savefig('branch_lengths_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
         plt.show()
         
     def show_final_stats(self):
@@ -832,7 +867,6 @@ class Peer:
         self.show_fraction_of_chain() 
         self.show_fraction_of_total_blocks()
         self.get_branch_lengths()
-        self.write_block_arrival_time()
         print("Average Number of Transactions per block in entire blockchain for Peer ID {} : {}".format(self.idx,self.blockchain_txns/len(self.blocktree)))
         print("Max Size of pending txn pool for Peer ID {} : {}".format(self.idx,self.pending_txn_max_size))
         print("Average size of transaction pool at time of choosing txns is {}\n".format(self.pending_txn_option_size/self.number_of_mines))
@@ -990,8 +1024,9 @@ if __name__=="__main__":
     simul.show_txns()
     simul.show_blocks()
     simul.show_peer_graph()
+    simul.peer_list[0].show_final_stats()
     for i in range(simul.cfg["num_peers"]):
-        simul.peer_list[i].show_final_stats()
+        simul.peer_list[i].write_block_arrival_time()
         
     
 
