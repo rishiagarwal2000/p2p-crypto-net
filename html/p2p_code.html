@@ -1,0 +1,3732 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>p2p_code API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>p2p_code</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import numpy as np
+import yaml 
+from queue import PriorityQueue
+from uuid import uuid1
+import argparse
+import networkx as nx
+import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
+import os
+import gc
+
+class PriorityEntry(object):
+    &#34;&#34;&#34;The event queue used is a min priority queue and this is the class used 
+    to record events in it. Priority is given to the time of execution of event
+
+    Args:
+        priority (float): Time of execution of event
+        data (Event): Event object representing the event to be executed
+
+    Attributes:
+        priority (float): Denotes time of execution. Events with lower time of execution will be executed earlier.
+        data (Event): Event class object. Contains the event to be exccuted in the form of a function.
+        
+    &#34;&#34;&#34;
+
+    def __init__(self, priority, data):
+        self.data = data
+        self.priority = priority
+
+    def __lt__(self, other):
+        &#34;&#34;&#34;Comparision method 
+
+        Args:
+            other (PriorityEntry): A different PriorityEntry object to compare with
+        
+        Returns:
+            True if self has lesser priority than other
+
+        &#34;&#34;&#34;
+        return self.priority &lt; other.priority
+
+
+class Simulator:
+    &#34;&#34;&#34;Simulator will create all peers and initialize them. It will also execute events at the next time step 
+    by iterating over the  event queue in increasing order of time
+
+    Args:
+        cfg_file (str): .yaml file containing all parameters for the simulation 
+
+    Attributes:
+        cfg_filename (str): .yaml file containing all simulation configuration parameters
+        cfg (dict of str to float or int or str): Contains all parameters from cfg_filename in dictionary format {param_name : value}
+        event_queue (PriorityQueue): A min PriorityQueue which stores PriorityEntry objects
+        current_time (float): The time correspnding to the current event being executed
+        rho (float): Numpy array containing delay times corresponding to speed of light propagation for every pair of peers
+        hashing_fractions (list of float): Represents the hashing power fraction for each peer. Should sum up to 1
+        genesis_block (Block): The genesis block that is supplied to every peer at the start of the simulation
+        peer_graph (list of list of int): P2P network between peers stored in the format of adjacency lists using peer IDs
+        peer_list (list of Peer): List of Peer objects representing peers in P2P network
+        
+    &#34;&#34;&#34;
+
+    def __init__(self, cfg_file):
+        self.cfg_filename = cfg_file
+        with open(cfg_file,&#39;r&#39;) as fp:
+            self.cfg = yaml.safe_load(fp) 
+        self.event_queue = PriorityQueue(0)
+        self.current_time = 0
+        self.rho = np.random.uniform(self.cfg[&#34;low_rho&#34;],self.cfg[&#34;high_rho&#34;],size=(self.cfg[&#34;num_peers&#34;],self.cfg[&#34;num_peers&#34;]))
+
+    def calc_latency(self,type_s, type_r, data_size, rho_val):
+        &#34;&#34;&#34;Calculates latency between two peers in network
+
+        Args:
+            type_s (str): Takes values &#39;slow&#39; or &#39;fast&#39;. Network speed type of sender peer
+            type_s (str): Takes values &#39;slow&#39; or &#39;fast&#39;. Network speed type of receiver peer
+            data_size (int): Memory size of message to be sent
+            rho_val (float): Delay due to speed of light propagation between sender and receiver peer
+
+        Returns:
+            Float value representing time taken send message from sender to receiver
+
+        &#34;&#34;&#34;
+        if type_s == &#34;slow&#34; or type_r == &#34;slow&#34;:
+            c = self.cfg[&#34;slow_cij_val&#34;]
+        else:
+            c = self.cfg[&#34;high_cij_val&#34;]
+        d = np.random.exponential(self.cfg[&#34;dij_cij_factor&#34;]/c)*1000
+        return rho_val + d + (data_size/c)*1000
+        
+
+    def get_graph(self):
+        &#34;&#34;&#34;Creates a random connected P2P graph between peers at the start of simulation. Graph created
+        is sampled uniformly from the set of all connected undirected graphs
+        
+        Args:
+            None
+
+        Returns:
+            A list of list of int representing the graph in adjacency list format
+
+        &#34;&#34;&#34;
+        n = self.cfg[&#34;num_peers&#34;]
+        perm = list(np.random.permutation(n))
+        in_net = [perm[0]]
+        graph = [[] for i in range(n)]
+        for peer_id in perm[1:]:
+            num_connections = np.random.randint(1,len(in_net)+1)
+            connections = list(np.random.choice(in_net, size = num_connections, replace = False))
+            graph[peer_id] = connections
+            for conn in connections:
+                graph[conn].append(peer_id)
+            in_net.append(peer_id)
+        return graph
+
+    def BA_model_graph(self):
+        &#34;&#34;&#34;Creates a random connected P2P graph between peers at the start of simulation based on the 
+        Babasi-Albert model of Scale-free network
+        
+        Args:
+            None
+
+        Returns:
+            A list of list of int representing the graph in adjacency list format
+
+        &#34;&#34;&#34;
+        np.random.seed(1)
+        n = self.cfg[&#34;num_peers&#34;]
+        m = self.cfg[&#34;babasi_albert_m&#34;]
+        assert m &lt; n, &#34;Babasi-Albert parameter &#39;m&#39; needs to be strictly smaller than n. Instead got {}&#34;.format(m)
+        perm = list(np.random.permutation(n))
+        graph = [[] for i in range(n)]
+        for peer_id in perm[:m]:
+            graph[peer_id].append(perm[m])
+        graph[perm[m]] = perm[:m]
+        degrees = np.zeros(n,)
+        degrees[perm[:m]]+=1
+        degrees[perm[m]]=m 
+        total_deg = 2*m
+        for idx in range(m+1,n):
+            attachments=np.random.choice(perm[:idx],size=m,replace=False,p=degrees[perm[:idx]]/total_deg)
+            for peer_id in attachments:
+                graph[peer_id].append(perm[idx])
+            graph[perm[idx]] = list(attachments)
+            degrees[attachments]+=1
+            degrees[perm[idx]]=m
+            total_deg+=2*m
+        return graph
+
+    def create_peers(self):
+        &#34;&#34;&#34;Creates, connects and initialises the peers 
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        n = self.cfg[&#34;num_peers&#34;]
+        self.genesis_block = Block(None,None,None,None,True,self.cfg[&#34;num_peers&#34;])
+        self.hashing_fractions = self.cfg[&#34;hashing_fractions&#34;]
+        assert np.sum(self.hashing_fractions)==1, &#34;Hashing fractions for {} peers should sum to 1&#34;.format(n)
+        mining_times = [self.cfg[&#34;net_mean_mining_time&#34;]/hf for hf in self.hashing_fractions]
+        slow_peers = round(n*self.cfg[&#34;slow_fraction&#34;])
+        temp = list(np.random.permutation(n))
+        peer_types=[(idx, &#34;slow&#34;) for idx in temp[:slow_peers]]+[(idx, &#34;fast&#34;) for idx in temp[slow_peers:]]
+        peer_types.sort()
+        graph = self.BA_model_graph()
+        self.peer_graph = graph
+        self.peer_list=[]
+        for idx, peer_type in peer_types:
+            self.peer_list.append(Peer(idx, self.cfg[&#34;txn_inter_arrival_time&#34;], mining_times[idx],peer_type,self.cfg[&#34;mining_fee&#34;],self,self.genesis_block))
+        for peer in self.peer_list:
+            idx = peer.idx
+            conns = list(np.array(self.peer_list)[graph[idx]])
+            peer.initialise_neighbours(conns)
+
+    def add_event(self,event,time):
+        &#34;&#34;&#34;Adds a PriorityEntry to event_queue
+
+        Args:
+            event (Event): Event class object containing the event to be executed
+            time (float): Time at which to execute event
+        
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        self.event_queue.put(PriorityEntry(time,event))
+
+    def initialise_event_queue(self):
+        &#34;&#34;&#34;Initialises event_queue so as start the mining and transactions creation process at each peer
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        initial_events = []
+        for peer in self.peer_list:
+            mining_event = Event(peer.start_mining, None)
+            txn_event = Event(peer.create_transaction, None)
+            self.add_event(mining_event,self.current_time)
+            self.add_event(txn_event,self.current_time)
+        
+    def run_world(self):
+        &#34;&#34;&#34;Starts executing events in event_queue starting at time 0
+
+        Args:
+            None
+        
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        completed_events=0
+        while (not self.event_queue.empty()) and self.current_time &lt; self.cfg[&#34;max_time&#34;]:
+            entry = self.event_queue.get()
+            self.current_time = entry.priority
+            entry.data.execute_event()
+            completed_events+=1
+            print(completed_events)
+        print(&#34;Simulation is over with total {} events executed at simulation time {} sec&#34;.format(completed_events,self.current_time/1000))
+
+
+    def start_world(self):
+        &#34;&#34;&#34;Starts the simulation by creating peers, initialising event_queue and commencing execution of events
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        self.create_peers()
+        self.initialise_event_queue()
+        self.run_world()
+        
+    def show_txns(self):
+        &#34;&#34;&#34;Displays total transactions created by each peer at the end of simulation
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        print(&#34;Transactions :&#34;)
+        for peer in self.peer_list:
+            print(&#34;Peer ID {} : {}&#34;.format(peer.idx,peer.total_txns))
+
+    def show_blocks(self):
+        &#34;&#34;&#34;Displays total blocks created by each peer at the end of simulation
+
+        Args:
+            None
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        print(&#34;Blocks :&#34;)
+        for peer in self.peer_list:
+            print(&#34;Peer ID {} : {}&#34;.format(peer.idx,peer.total_blocks))
+    
+    def show_peer_graph(self):
+        &#34;&#34;&#34;Displays the connected P2P graph network
+
+        Args:
+            None
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        graph = nx.DiGraph()
+        for i in range(self.cfg[&#34;num_peers&#34;]):
+            graph.add_node(i,status=&#34;peer&#34;)
+        for i in range(self.cfg[&#34;num_peers&#34;]):
+            for x in self.peer_graph[i]:
+                graph.add_edge(i,x)
+        nx.draw_networkx(graph, with_labels=True, node_size=10, width=0.5, arrowsize=5)
+        # plt.savefig(&#34;p2p_graph_{}.png&#34;.format(os.path.basename(self.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+        plt.show()
+        
+class Peer:
+    &#34;&#34;&#34;Peer class instants represent a peer in the network
+
+    Args:
+        idx (int): ID of the peer
+        txn_inter_arrival_mean (float): Mean time between creation of two transactions
+        mean_mining_time (float): Mean time between creation of two blocks
+        peer_type (str): Takes values &#39;slow&#39; or &#39;fast&#39;
+        mining_fee (float): Bitcoins paid to a miner on generation of a block
+        simulator (Simulator): Reference to the simulator running the simulation 
+        genesis_block (Block): Genesis block created by the simulator at the start of simulation
+
+    Attributes:
+        idx (int): Peer ID in the network
+        Ttx (float): Mean time between creation of transactions
+        mean_mining_time (float): Mean time between creation of blocks
+        peer_type (str): Takes values &#39;slow&#39; or &#39;fast&#39; 
+        pending_txns (set of Transaction): Set of transactions that can be included in a block being 
+            mined on the longest chain
+        pending_blocks (list of Block): List of received blocks whose parent has not been received yet
+        simulator (Simulator): Reference to the simulator running the simulation
+        blocktree (list of Block): List of blocks that have been confirmed and added to this peer&#39;s 
+            version of the blockchain
+        next_block_creation_event (Event): Event class object denoting the next event of creation of a 
+            block. Useful for cancelling block creation event that creates a block on a shorter chain
+        current_chain_end (Block): The block being mined on currently 
+        mining_fee (float): Money generated due to creation of one block
+        all_received_blocks (set of Block): Set of blocks that have been received to avoid re-addition to blockchain
+        total_blocks (int): Total blocks generated by peer
+        total_txns (int): Total transactions generated by peer
+        block_arrival_text (str): Records the block hash, block number, time of arrival and parent block hash of
+            every received block
+        blockchain_txns (int): Total number of transactions in the blocktree
+        pending_txn_max_size (int): Maximum size of the pending_txns pool
+        pending_txn_option_size (int): Sums up the length of pending_txns at the time of choosing a set of
+            transactions to include in a block being mined. Used to find average size of pending_txns pool
+            at time of mining
+        number_of_mines (int): Number of times a set of transactions was chosen for a block to be mined
+        neighbours (dict of Peer to set of Block or Transaction): Dictionary recording what messages have been 
+            sent to each of its immediate neighbours or peers
+
+    &#34;&#34;&#34;
+
+    def __init__(self, idx, txn_inter_arrival_mean, mean_mining_time, peer_type, mining_fee, simulator, genesis_block):
+        self.idx = idx 
+        self.Ttx = txn_inter_arrival_mean
+        self.mean_mining_time = mean_mining_time
+        self.peer_type = peer_type 
+        self.pending_txns = set() 
+        self.pending_blocks = []
+        self.simulator = simulator
+        self.blocktree = [genesis_block]
+        self.next_block_creation_event = None 
+        self.current_chain_end = self.blocktree[0]
+        self.mining_fee = mining_fee
+        self.all_received_blocks=set()
+        self.total_blocks=0
+        self.total_txns=0
+        self.block_arrival_text=&#34;&#34;
+        self.blockchain_txns=0
+        self.pending_txn_max_size=0
+        self.pending_txn_option_size = 0
+        self.number_of_mines=0
+
+    def initialise_neighbours(self, neighbours):
+        &#34;&#34;&#34;Initialises the immediate neighbours and the set of messages sent to each of them to empty set
+
+        Args:
+            neighbours (list of Peer): List of Peer objects representing immediate neighbours in network
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        self.neighbours = {nei : set() for nei in neighbours} ## dict of peers : msg sent from us to them
+
+    def broadcast(self, msg):
+        &#34;&#34;&#34;Given a message, forwards it to neighbours who have not received it from this peer 
+        and who have not sent it to this peer
+
+        Args:
+            msg (Block or Transaction): A Block object or Transaction object 
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        for neighbour, sent in self.neighbours.items():
+            if msg not in sent and msg not in neighbour.neighbours[self]:
+                latency = self.simulator.calc_latency(self.peer_type, neighbour.peer_type, msg.size,self.simulator.rho[self.idx,neighbour.idx])
+                receiving_time = round(self.simulator.current_time + latency,2)
+                if isinstance(msg, Transaction):
+                    func = neighbour.receive_transaction
+                    args = {&#34;txn&#34; : msg}
+                else:
+                    func = neighbour.receive_block
+                    args = {&#34;block&#34; : msg}
+                self.simulator.add_event(Event(func,args), receiving_time)
+                sent.add(msg)
+        
+    def create_transaction(self, args):
+        &#34;&#34;&#34;Creates a transaction 
+
+        Args:
+            args (None): Added for uniformity
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        # Samples from the exponential distribution
+        # Returns Id_y, C, and the time of transaction
+        current_peers = list(range(self.simulator.cfg[&#34;num_peers&#34;]))
+        current_peers.remove(self.idx)
+        idy = np.random.choice(current_peers)
+        txn_id = uuid1()
+        if self.idx in self.current_chain_end.checkpoint:
+            coins = np.random.uniform(0, self.current_chain_end.checkpoint[self.idx]/100000)
+        else:
+            coins = 0 
+        new_txn = Transaction(txn_id, self.idx, idy, coins)
+        self.pending_txns.add(new_txn)
+        self.pending_txn_max_size = max(self.pending_txn_max_size,len(self.pending_txns))
+        self.broadcast(new_txn)
+        self.total_txns+=1
+        next_txn_time = round(self.simulator.current_time+np.random.exponential(self.Ttx),2)
+        create_txn_event = Event(self.create_transaction,{})
+        self.simulator.add_event(create_txn_event, next_txn_time)
+
+    
+    def mine_block(self):
+        &#34;&#34;&#34;Creates a block creation event and adds it to the simulator&#39;s event_queue so as to 
+        create a block in the future
+
+        Args:
+            None
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        coinbase_id = uuid1()
+        coinbase = Transaction(coinbase_id,None,self.idx,self.mining_fee)
+        num_of_transactions = min(1024,len(self.pending_txns)+1)-1#np.random.randint(0,min(1024,len(self.pending_txns)+1))
+        self.pending_txn_option_size +=len(self.pending_txns)
+        self.number_of_mines+=1
+        curr_block_txns = list(np.random.choice(list(self.pending_txns),size=num_of_transactions,replace=False))
+        curr_block_txns = [coinbase]+curr_block_txns
+        checkpoint = self.current_chain_end.checkpoint.copy()
+        checkpoint, txn_idx = self.get_new_checkpoint(checkpoint, curr_block_txns,mining=True)
+        blkid = uuid1()
+        args = {&#34;block&#34;: Block(blkid, self.current_chain_end, curr_block_txns[:txn_idx], self.idx, False,self.simulator.cfg[&#34;num_peers&#34;])}
+        creation_time = round(self.simulator.current_time + np.random.exponential(self.mean_mining_time),2)
+        block_create_event = Event(self.create_block,args)
+        self.next_block_creation_event = block_create_event 
+        self.simulator.add_event(block_create_event, creation_time)
+        
+
+    def create_block(self, args):
+        &#34;&#34;&#34;Creates a block 
+
+        Args:
+            args (dict of str to Block): Dictionary containing the Block object that needs to be added to the blockchain
+                and also broadcasted
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        block = args[&#34;block&#34;]
+        checkpoint = (block.parent).checkpoint.copy()
+        checkpoint = self.get_new_checkpoint(checkpoint, block.txns)
+        block.store_checkpoint(checkpoint)
+        self.blocktree.append(block)
+        self.blockchain_txns+=len(block.txns)
+        self.current_chain_end = block
+        self.pending_txns -= set(block.txns)
+        self.broadcast(block)
+        self.total_blocks+=1
+        self.mine_block()
+        print(&#34;Block created at time {} with id : {} by Peer ID : {}&#34;.format(self.simulator.current_time,block.blkid,self.idx))
+    
+    def start_mining(self,args):
+        &#34;&#34;&#34;Starts the mining process. Used by simulator&#39;s event_queue to initialise the event_queue
+
+        Args:
+            args (None): Added for uniformity
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        self.mine_block()
+
+    def update_checkpoint(self, txn, checkpoint): 
+        &#34;&#34;&#34;Given a transaction and a dictionary of balances for each pair it updates the balances 
+        of the peers involved in the transaction
+
+        Args:
+            txn (Transaction): The transaction which states the sender, receiver peers and the amount of 
+                bitcoins involved
+            checkpoint (dict of int to int): Dictionary storing balances in the form of {peer_id : balance} format
+        
+        Returns:
+            Updated checkpoint with changed balances or None if any balance becomes negative due to the transaction
+
+        &#34;&#34;&#34;
+        if txn.sender is not None:
+            if txn.sender in checkpoint:
+                checkpoint[txn.sender] -= txn.coins
+                if txn.receiver in checkpoint:
+                    checkpoint[txn.receiver] += txn.coins
+                else:
+                    checkpoint[txn.receiver] = txn.coins
+                if checkpoint[txn.sender] &lt; 0:
+                    return None 
+            else:
+                return None 
+        else:
+            ## Coinbase txn
+            if txn.receiver in checkpoint:
+                checkpoint[txn.receiver] += txn.coins
+            else:
+                checkpoint[txn.receiver] = txn.coins
+            
+        return checkpoint
+        
+    def get_new_checkpoint(self, checkpoint, txns, mining=False):
+        &#34;&#34;&#34;Given a list of transactions and an initial checkpoint, generates the updated checkpoint after 
+        processing all transactions. 
+
+        Args:
+            checkpoint (dict of int to int): Conatins balances for each peer in the format {peer_id : balance}
+            txns (list of Transaction): List of Transaction objects 
+            mining (boolean): Boolean value to control output. Refer to Returns section
+
+        Returns:
+            If mining is True, then it returns the index of transactions upto which the balances remain non-
+            negative and the resulting updated checkpoint.
+            If mining is False, then it checks through all transactions and returns updated checkpoint only
+            if balances remain non-negative else None
+            
+        &#34;&#34;&#34;
+        txn_idx = 0
+        for txn in txns:
+            temp_checkpoint = checkpoint.copy()
+            checkpoint = self.update_checkpoint(txn, checkpoint)
+            if checkpoint is None:
+                if mining:
+                    return temp_checkpoint, txn_idx
+                return None
+            txn_idx+=1
+        if mining:
+            return checkpoint, txn_idx
+        return checkpoint
+
+    def receive_transaction(self, args):
+        &#34;&#34;&#34;Receives a transaction from a neighbour peer
+
+        Args:
+            args (dict of str to Transaction): Dictionary containing the Transaction object.
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        txn = args[&#34;txn&#34;]
+        self.broadcast(txn)
+        if txn not in self.current_chain_end.seen_txns:
+            self.pending_txns.add(txn)
+            self.pending_txn_max_size = max(self.pending_txn_max_size,len(self.pending_txns))
+    
+    def add_pending_blocks(self, new_block):
+        &#34;&#34;&#34;Adds pending blocks (whose parents haven&#39;t arrived) to the blockchain on addition of a 
+        new block to the blockchain
+
+        Args:
+            new_block (Block): Block object that has been received and added to the blockchain. It can trigger 
+                addition of some pending blocks
+        
+        Returns:
+            Amongst the newly added blocks, it returns the one with maximum chain length (or height) in the blockchain
+
+        &#34;&#34;&#34;
+        foliage = set(self.pending_blocks)
+        foliage.add(new_block)
+        max_chain_length_block=new_block
+        check_blocks = {new_block}
+        visited_adding = [(0,0)]*len(self.pending_blocks)
+        blk_idx = {blk : i for i, blk in enumerate(self.pending_blocks)}
+        p_idx = 0
+        while p_idx&lt;len(self.pending_blocks):
+            if visited_adding[p_idx][0]!=1:
+                temp=[]
+                judgement = None 
+                cur_block = self.pending_blocks[p_idx]
+                invalid = False
+                while True:
+                    if cur_block==new_block:
+                        judgement=True
+                        break
+                    elif visited_adding[blk_idx[cur_block]]==(1,0):
+                        judgement=False
+                        break
+                    elif visited_adding[blk_idx[cur_block]]==(1,-1):
+                        judgement=True 
+                        invalid=True
+                        break
+                    elif visited_adding[blk_idx[cur_block]]==(1,1):
+                        judgement=True
+                        break
+                    elif cur_block.parent in foliage:
+                        temp.append(blk_idx[cur_block])
+                        cur_block = cur_block.parent
+                    else:
+                        temp.append(blk_idx[cur_block])
+                        judgement = False 
+                        break
+                if judgement:
+                    for idx in temp[::-1]:
+                        if invalid:
+                            visited_adding[idx] = (1,-1)
+                            continue
+                        blk = self.pending_blocks[idx]
+                        checkpoint = blk.parent.checkpoint.copy()
+                        checkpoint = self.get_new_checkpoint(checkpoint,blk.txns)
+                        if checkpoint:
+                            blk.store_checkpoint(checkpoint)
+                            visited_adding[idx] = (1,1)
+                            if blk.chain_length &gt; max_chain_length_block.chain_length:
+                                max_chain_length_block = blk
+                        else:
+                            visited_adding[idx] = (1,-1)
+                            invalid=True
+                else:
+                    for idx in temp:
+                        visited_adding[idx]=(1,0)
+            p_idx+=1
+        
+        for i, dec in enumerate(visited_adding):
+            if dec==(1,1):
+                self.blocktree.append(self.pending_blocks[i])
+                (self.pending_blocks[i]).parent.seen_its_child(self.idx)
+                self.blockchain_txns+=len(self.pending_blocks[i].txns)
+        self.pending_blocks = [self.pending_blocks[i] for i, dec in enumerate(visited_adding) if dec == (1,0)]
+        return max_chain_length_block
+
+    def receive_block(self, args):
+        &#34;&#34;&#34;Receives a block, validates and adds it to the blockchain if it is a valid block
+
+        Args:
+            args (dict of str to Block): Dictionary containing the received block
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        block = args[&#34;block&#34;]
+        if block in self.all_received_blocks:
+            return
+        self.all_received_blocks.add(block)
+        self.block_arrival_text+=&#34;{}, {}, {} sec, {}\n&#34;.format(block.blkid,block.chain_length-1,self.simulator.current_time/1000,block.parent.blkid)
+        if block.parent not in self.blocktree:
+            self.pending_blocks.append(block)
+            self.broadcast(block)
+        else:
+            checkpoint = (block.parent).checkpoint.copy()
+            checkpoint = self.get_new_checkpoint(checkpoint, block.txns)
+            if checkpoint:
+                self.broadcast(block)
+                block.store_checkpoint(checkpoint)
+                self.blocktree.append(block)
+                self.blockchain_txns+=len(block.txns)
+                block.parent.seen_its_child(self.idx)
+                if block.parent == self.current_chain_end:
+                    if self.next_block_creation_event is not None:
+                        self.next_block_creation_event.execute = False
+                    self.pending_txns -= set(block.txns)
+                    self.current_chain_end = block
+                    temp_chain_end=self.add_pending_blocks(block)
+                    if temp_chain_end != self.current_chain_end:
+                        pointer = temp_chain_end
+                        while pointer != self.current_chain_end:
+                            self.pending_txns -= set(pointer.txns)
+                            pointer = pointer.parent
+                    self.current_chain_end = temp_chain_end
+                    self.mine_block()
+                else:
+                    temp_chain_end=self.add_pending_blocks(block)
+                    if temp_chain_end.chain_length &gt; self.current_chain_end.chain_length:
+                        if self.next_block_creation_event is not None:
+                            self.next_block_creation_event.execute = False
+                        self.pending_txns -= temp_chain_end.seen_txns
+                        self.current_chain_end = temp_chain_end
+                        self.mine_block()
+    
+    def get_stats(self):
+        &#34;&#34;&#34;Calculates the number of blocks each peer has in the longest chain
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        blocks_per_peer = [0]*(self.simulator.cfg[&#34;num_peers&#34;])
+        cur_block = self.current_chain_end
+        while cur_block.blkid!=&#34;GENESIS&#34;:
+            blocks_per_peer[cur_block.creator_id]+=1
+            cur_block=cur_block.parent
+        return blocks_per_peer
+        
+
+    def show_blocktree(self):  
+        &#34;&#34;&#34;Creates a graphical representation of the blockchain for users to visualize
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        tree = nx.DiGraph()  
+        for block in self.blocktree:
+            tree.add_node(block.blkid,status=&#34;Branch_block&#34;)
+        for block in self.blocktree:
+            if block.blkid!=&#34;GENESIS&#34;:
+                tree.add_edge(block.blkid,block.parent.blkid)
+        cur_block = self.current_chain_end
+        while cur_block.blkid!=&#34;GENESIS&#34;:
+            tree.nodes[cur_block.blkid][&#34;status&#34;] = &#34;Longest_chain_block&#34;
+            cur_block = cur_block.parent
+        tree.nodes[&#34;GENESIS&#34;][&#34;status&#34;] = &#34;GENESIS_block&#34;
+        node_color = []
+        genesis_color, longest_chain_color, branch_color = &#39;yellow&#39;, &#39;red&#39;, &#39;blue&#39;
+        for node in tree.nodes(data=True):
+            if &#39;Branch_block&#39; == node[1][&#39;status&#39;]:
+                node_color.append(branch_color)
+            elif &#39;Longest_chain_block&#39; == node[1][&#39;status&#39;]:
+                node_color.append(longest_chain_color)
+            elif &#39;GENESIS_block&#39; == node[1][&#39;status&#39;]:
+                node_color.append(genesis_color)
+        nx.draw_networkx(tree, with_labels=False, node_size=10, node_color=node_color, width=0.5, arrowsize=5)
+        genesis_patch = mpatches.Patch(color=genesis_color, label=&#39;Genesis block&#39;)
+        longest_patch = mpatches.Patch(color=longest_chain_color, label=&#39;Longest Chain block&#39;)
+        branch_patch = mpatches.Patch(color=branch_color, label=&#39;Branch block&#39;)
+        plt.legend(handles=[genesis_patch, longest_patch, branch_patch], loc=&#34;upper right&#34;)        
+        # plt.savefig(&#39;blockchain_{}_{}.png&#39;.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+        plt.show()
+
+    def show_fraction_of_chain(self):
+        &#34;&#34;&#34;Displays a bar graph showing the fraction of blocks created by each peer in this peer&#39;s
+        version of the blockchain
+
+        Args:
+            None
+        
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        blocks_per_peer = self.get_stats()
+        y = [num/self.current_chain_end.chain_length for num in blocks_per_peer]
+        x = [&#34;peer_{}\nHp:{}\n{}&#34;.format(idx,self.simulator.hashing_fractions[idx],self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg[&#34;num_peers&#34;])]
+        fig = plt.figure(figsize = (10, 5))
+        plt.bar(x, y, color =&#39;blue&#39;,width = 0.4)
+        for index, value in enumerate(y):
+            value = round(value,3)
+            plt.text(index , 1.02*value,&#39;%f&#39; % value, ha=&#39;center&#39;, va=&#39;bottom&#39;)
+        plt.xticks(x)
+        plt.xlabel(&#34;Peer ID&#34;)
+        plt.ylabel(&#34;Fraction of Longest chain&#34;)
+        plt.title(&#34;Fraction of longest chain produced per peer&#34;)
+        # plt.savefig(&#39;chain_fraction_{}_{}.png&#39;.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+        plt.show()
+
+    def show_fraction_of_total_blocks(self):
+        &#34;&#34;&#34;Displays a bar graph showing the fraction of blocks created by each peer that got into 
+        this peer&#39;s version of the blockchain
+
+        Args:
+            None
+        
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        blocks_per_peer = self.get_stats()
+        y=[]
+        for i, num in enumerate(blocks_per_peer):
+            blocks_produced = self.simulator.peer_list[i].total_blocks
+            if blocks_produced!=0:
+                y.append(num/blocks_produced)
+            else:
+                y.append(0)
+        x = [&#34;peer_{}\nHp:{}\n{}&#34;.format(idx,self.simulator.hashing_fractions[idx],self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg[&#34;num_peers&#34;])]
+        fig = plt.figure(figsize = (10, 5))
+        plt.bar(x, y, color =&#39;blue&#39;,width = 0.4)
+        for index, value in enumerate(y):
+            value = round(value,3)
+            plt.text(index , 1.02*value,&#39;%f&#39; % value, ha=&#39;center&#39;, va=&#39;bottom&#39;)
+        plt.xticks(x)
+        plt.xlabel(&#34;Peer ID&#34;)
+        plt.ylabel(&#34;Fraction of total blocks&#34;)
+        plt.title(&#34;Fraction of Total blocks that went into Longest chain per peer&#34;)
+        # plt.savefig(&#39;success_fraction_{}_{}.png&#39;.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+        plt.show()
+    
+    def write_block_arrival_time(self):
+        &#34;&#34;&#34;Writes the block arrival data to a text file
+
+        Args:
+            None
+        
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        folder = self.simulator.cfg[&#34;text_files_folder&#34;]
+        target = os.path.join(folder,os.path.basename(self.simulator.cfg_filename))
+        if not os.path.isdir(target):
+            os.mkdir(target)
+        with open(os.path.join(target,&#34;peer_{}.txt&#34;.format(self.idx)),&#39;w&#39;) as fp:
+            fp.write(&#34;blockHash, blockNum, TimeOfArrival, parentBlockHash\n&#34;+self.block_arrival_text)
+    
+    def get_branch_lengths(self):
+        &#34;&#34;&#34;Displays a bar graph showing the lengths of all the side branches (orphaned chains) 
+        and the longest chain in this peers version of the blockchain
+
+        Args:
+            None
+        
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        is_parent = {block : 0 for block in self.blocktree}
+        for block in self.blocktree:
+            if block!=self.simulator.genesis_block:
+                is_parent[block.parent]=1
+        longest_chain_idx = 0
+        y=[]
+        for block, val in is_parent.items():
+            if val==0:
+                y.append(block.chain_length)
+                if block == self.current_chain_end:
+                    longest_chain_idx = len(y)-1
+                
+        x=[&#34;SB_{}&#34;.format(i) for i in range(longest_chain_idx)]+[&#34;MB&#34;]+[&#34;SB_{}&#34;.format(i) for i in range(longest_chain_idx,len(y)-1)]
+        fig = plt.figure(figsize = (10, 5))
+        plt.bar(x, y, color =&#39;blue&#39;,width = 0.4)
+        for index, value in enumerate(y):
+            plt.text(index , 1.02*value,&#39;%d&#39; % int(value), ha=&#39;center&#39;, va=&#39;bottom&#39;)
+        plt.xticks(x)
+        plt.xlabel(&#34;Branches (SB : Side Branch ; MB : Main Branch)&#34;)
+        plt.ylabel(&#34;Length in number of blocks&#34;)
+        plt.title(&#34;Length of Blockchain branches&#34;)
+        # plt.savefig(&#39;branch_lengths_{}_{}.png&#39;.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+        plt.show()
+        
+    def show_final_stats(self):
+        &#34;&#34;&#34;Calls the plotting functions all together. Also displays some data regarding the average number of 
+        transactions included in each block in the blockchain, the maximum size of the pending transactions pool
+        and the average size of the pending transactions pool when mining a block
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        print(&#34;&#34;.join([&#39;*&#39;]*30)+&#34;Peer ID {}&#34;.format(self.idx)+&#34;&#34;.join([&#39;*&#39;]*30))
+        self.show_blocktree()
+        self.show_fraction_of_chain() 
+        self.show_fraction_of_total_blocks()
+        self.get_branch_lengths()
+        print(&#34;Average Number of Transactions per block in entire blockchain for Peer ID {} : {}&#34;.format(self.idx,self.blockchain_txns/len(self.blocktree)))
+        print(&#34;Max Size of pending txn pool for Peer ID {} : {}&#34;.format(self.idx,self.pending_txn_max_size))
+        print(&#34;Average size of transaction pool at time of choosing txns is {}\n&#34;.format(self.pending_txn_option_size/self.number_of_mines))
+            
+class Block:
+    &#34;&#34;&#34;Represents the block in a blockchain
+
+    Args:
+        blkid (str): ID for the block
+        parent (Block): Parent block 
+        list_of_transactions (list of Transaction): List of transactions to be included in this block
+        gen_peer_id (int): ID of the creator peer
+        genesis_block (boolean): True if genesis block needs to be created False otherwise
+        number_of_peers (int): Number of peers in the network
+
+    Attributes:
+        blkid (str): ID identifying each block uniquely
+        checkpoint (dict of int to int): Dictioanry storing balances of each peer as calculated along the 
+            chain this block was mined on, from the genesis block to this block
+        chain_length (int): Denotes the length of the chain that this block was mined on. Chain length 
+            for genesis block is considered 1
+        size (int): Memory size in Kb
+        seen_txns (set of Transaction): Transactions that have been included in all the blocks (including
+            this block) on the chain that this block was mined on
+        parent (Block): Parent block for this block
+        txns (list of Transaction): Transactions that have been included in this block
+        creator_id (int): ID of the peer whoc created this block
+        peers_who_saw_child (list of boolean): peers_who_saw_child[idx] is True if peer with ID = idx
+            has received a block that is a child of this block (that mines on this block)
+        sum_chpeers (int): Number of True values in peers_who_saw_child
+
+    &#34;&#34;&#34;
+
+    def __init__(self, blkid, parent, list_of_transactions, gen_peer_id, genesis_block, number_of_peers):
+        if genesis_block:
+            self.blkid = &#34;GENESIS&#34;
+            self.checkpoint = {i : 0 for i in range(number_of_peers)}
+            self.chain_length = 1
+            self.size = 1
+            self.seen_txns = set()
+        else:
+            self.parent  = parent 
+            self.blkid = blkid 
+            self.txns = list_of_transactions
+            self.creator_id = gen_peer_id
+            self.chain_length = self.parent.chain_length + 1
+            self.size = len(self.txns)
+            self.seen_txns = self.parent.seen_txns | set(self.txns)
+        self.peers_who_saw_child = [False]*number_of_peers
+        self.sum_chpeers = 0
+
+    def store_checkpoint(self, checkpoint):
+        &#34;&#34;&#34;Records the checkpoint at this block
+
+        Args:
+            checkpoint (dict of int to int): Dictioanry storing balances of each peer as calculated along the 
+                chain this block was mined on, from the genesis block to this block
+        
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        self.checkpoint = checkpoint
+    
+    def seen_its_child(self, peer_idx):
+        &#34;&#34;&#34;Registers that a particular peer has received a block that is a child of this block
+        (that was mined on this block). This function prunes the blockchain by deleting seen_txns
+        for blocks on which mining is guaranteed to not take place at any time in the future
+
+        Args:
+            peer_idx (int): ID of the peer who received a child block of this block
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        self.sum_chpeers += (self.peers_who_saw_child[peer_idx] ^ True)
+        self.peers_who_saw_child[peer_idx] = True
+        if self.sum_chpeers == len(self.peers_who_saw_child):
+            try:
+                del self.seen_txns
+                gc.collect()
+            except:
+                pass
+
+class Event:
+    &#34;&#34;&#34;Event class instants represent an event to be executed in the event_queue
+
+    Args:
+        func (function): Function to be executed which simulates event execution
+        args (dict of str to Block or Transaction): Arguments for the function to be executed
+
+    Attributes:
+        func (function): A receive_transaction, receive_block, create_transaction or create_block function 
+            corresponding to a particular peer
+        args (dict of str to Block or Transaction): Dictionary contains the arguments needed for the function 
+            to be called
+        execute (boolean): A boolean value to toggle between executing and not executing the event. True by 
+            default
+
+    &#34;&#34;&#34;
+
+    def __init__(self, func, args):
+        self.func = func
+        self.args = args
+        self.execute = True
+    
+    def execute_event(self):
+        &#34;&#34;&#34;Executes the stored function with the stored arguments if execute is True
+
+        Args:
+            None
+        
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        if self.execute:
+            self.func(self.args)
+
+class Transaction:
+    &#34;&#34;&#34;Transaction class instances represent a transaction in the simulation
+
+    Args:
+        txn_id (str): Transaction ID for this transaction
+        sender (int): ID of peer who will pay bitcoins
+        receiver (int): ID of peer who will receive bitcoins
+        coins (float): Bitcoins involved in the transfer
+
+    Attributes:
+        txn_id (str): The unique ID of the transaction
+        sender (int): The ID of the peer who will pay the bitcoin
+        receiver (int): The ID of the peer who will receive the bitcoin
+        coins (float): Bitcoins involved in the transfer of money
+        size (int): Memory size of the transaction in Kb
+        
+    &#34;&#34;&#34;
+
+    def __init__(self, txn_id, sender, receiver, coins):
+        self.txn_id = txn_id ## Must be unique
+        self.sender = sender ## When None it means its the mining fee (coin base transaction)
+        self.receiver = receiver ## Receiver can&#39;t be none (invalid transaction)
+        assert coins &gt;= 0, &#34;Negative Transactions disallowed&#34;
+        self.coins = coins
+        self.size = 1 ## in Kb
+
+if __name__==&#34;__main__&#34;:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(&#39;--config&#39;, type=str, required=True)
+    args = parser.parse_args()
+    simul = Simulator(args.config)
+    simul.start_world()
+    simul.show_txns()
+    simul.show_blocks()
+    simul.show_peer_graph()
+    simul.peer_list[0].show_final_stats()
+    for i in range(simul.cfg[&#34;num_peers&#34;]):
+        simul.peer_list[i].write_block_arrival_time()
+        
+    
+
+
+    </code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="p2p_code.Block"><code class="flex name class">
+<span>class <span class="ident">Block</span></span>
+<span>(</span><span>blkid, parent, list_of_transactions, gen_peer_id, genesis_block, number_of_peers)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents the block in a blockchain</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>blkid</code></strong> :&ensp;<code>str</code></dt>
+<dd>ID for the block</dd>
+<dt><strong><code>parent</code></strong> :&ensp;<code><a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code></dt>
+<dd>Parent block </dd>
+<dt><strong><code>list_of_transactions</code></strong> :&ensp;<code>list</code> of <code><a title="p2p_code.Transaction" href="#p2p_code.Transaction">Transaction</a></code></dt>
+<dd>List of transactions to be included in this block</dd>
+<dt><strong><code>gen_peer_id</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of the creator peer</dd>
+<dt><strong><code>genesis_block</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>True if genesis block needs to be created False otherwise</dd>
+<dt><strong><code>number_of_peers</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of peers in the network</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>blkid</code></strong> :&ensp;<code>str</code></dt>
+<dd>ID identifying each block uniquely</dd>
+<dt><strong><code>checkpoint</code></strong> :&ensp;<code>dict</code> of <code>int to int</code></dt>
+<dd>Dictioanry storing balances of each peer as calculated along the
+chain this block was mined on, from the genesis block to this block</dd>
+<dt><strong><code>chain_length</code></strong> :&ensp;<code>int</code></dt>
+<dd>Denotes the length of the chain that this block was mined on. Chain length
+for genesis block is considered 1</dd>
+<dt><strong><code>size</code></strong> :&ensp;<code>int</code></dt>
+<dd>Memory size in Kb</dd>
+<dt><strong><code>seen_txns</code></strong> :&ensp;<code>set</code> of <code><a title="p2p_code.Transaction" href="#p2p_code.Transaction">Transaction</a></code></dt>
+<dd>Transactions that have been included in all the blocks (including
+this block) on the chain that this block was mined on</dd>
+<dt><strong><code>parent</code></strong> :&ensp;<code><a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code></dt>
+<dd>Parent block for this block</dd>
+<dt><strong><code>txns</code></strong> :&ensp;<code>list</code> of <code><a title="p2p_code.Transaction" href="#p2p_code.Transaction">Transaction</a></code></dt>
+<dd>Transactions that have been included in this block</dd>
+<dt><strong><code>creator_id</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of the peer whoc created this block</dd>
+<dt><strong><code>peers_who_saw_child</code></strong> :&ensp;<code>list</code> of <code>boolean</code></dt>
+<dd>peers_who_saw_child[idx] is True if peer with ID = idx
+has received a block that is a child of this block (that mines on this block)</dd>
+<dt><strong><code>sum_chpeers</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of True values in peers_who_saw_child</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Block:
+    &#34;&#34;&#34;Represents the block in a blockchain
+
+    Args:
+        blkid (str): ID for the block
+        parent (Block): Parent block 
+        list_of_transactions (list of Transaction): List of transactions to be included in this block
+        gen_peer_id (int): ID of the creator peer
+        genesis_block (boolean): True if genesis block needs to be created False otherwise
+        number_of_peers (int): Number of peers in the network
+
+    Attributes:
+        blkid (str): ID identifying each block uniquely
+        checkpoint (dict of int to int): Dictioanry storing balances of each peer as calculated along the 
+            chain this block was mined on, from the genesis block to this block
+        chain_length (int): Denotes the length of the chain that this block was mined on. Chain length 
+            for genesis block is considered 1
+        size (int): Memory size in Kb
+        seen_txns (set of Transaction): Transactions that have been included in all the blocks (including
+            this block) on the chain that this block was mined on
+        parent (Block): Parent block for this block
+        txns (list of Transaction): Transactions that have been included in this block
+        creator_id (int): ID of the peer whoc created this block
+        peers_who_saw_child (list of boolean): peers_who_saw_child[idx] is True if peer with ID = idx
+            has received a block that is a child of this block (that mines on this block)
+        sum_chpeers (int): Number of True values in peers_who_saw_child
+
+    &#34;&#34;&#34;
+
+    def __init__(self, blkid, parent, list_of_transactions, gen_peer_id, genesis_block, number_of_peers):
+        if genesis_block:
+            self.blkid = &#34;GENESIS&#34;
+            self.checkpoint = {i : 0 for i in range(number_of_peers)}
+            self.chain_length = 1
+            self.size = 1
+            self.seen_txns = set()
+        else:
+            self.parent  = parent 
+            self.blkid = blkid 
+            self.txns = list_of_transactions
+            self.creator_id = gen_peer_id
+            self.chain_length = self.parent.chain_length + 1
+            self.size = len(self.txns)
+            self.seen_txns = self.parent.seen_txns | set(self.txns)
+        self.peers_who_saw_child = [False]*number_of_peers
+        self.sum_chpeers = 0
+
+    def store_checkpoint(self, checkpoint):
+        &#34;&#34;&#34;Records the checkpoint at this block
+
+        Args:
+            checkpoint (dict of int to int): Dictioanry storing balances of each peer as calculated along the 
+                chain this block was mined on, from the genesis block to this block
+        
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        self.checkpoint = checkpoint
+    
+    def seen_its_child(self, peer_idx):
+        &#34;&#34;&#34;Registers that a particular peer has received a block that is a child of this block
+        (that was mined on this block). This function prunes the blockchain by deleting seen_txns
+        for blocks on which mining is guaranteed to not take place at any time in the future
+
+        Args:
+            peer_idx (int): ID of the peer who received a child block of this block
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        self.sum_chpeers += (self.peers_who_saw_child[peer_idx] ^ True)
+        self.peers_who_saw_child[peer_idx] = True
+        if self.sum_chpeers == len(self.peers_who_saw_child):
+            try:
+                del self.seen_txns
+                gc.collect()
+            except:
+                pass</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="p2p_code.Block.seen_its_child"><code class="name flex">
+<span>def <span class="ident">seen_its_child</span></span>(<span>self, peer_idx)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Registers that a particular peer has received a block that is a child of this block
+(that was mined on this block). This function prunes the blockchain by deleting seen_txns
+for blocks on which mining is guaranteed to not take place at any time in the future</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>peer_idx</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of the peer who received a child block of this block</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def seen_its_child(self, peer_idx):
+    &#34;&#34;&#34;Registers that a particular peer has received a block that is a child of this block
+    (that was mined on this block). This function prunes the blockchain by deleting seen_txns
+    for blocks on which mining is guaranteed to not take place at any time in the future
+
+    Args:
+        peer_idx (int): ID of the peer who received a child block of this block
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    self.sum_chpeers += (self.peers_who_saw_child[peer_idx] ^ True)
+    self.peers_who_saw_child[peer_idx] = True
+    if self.sum_chpeers == len(self.peers_who_saw_child):
+        try:
+            del self.seen_txns
+            gc.collect()
+        except:
+            pass</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Block.store_checkpoint"><code class="name flex">
+<span>def <span class="ident">store_checkpoint</span></span>(<span>self, checkpoint)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Records the checkpoint at this block</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>checkpoint</code></strong> :&ensp;<code>dict</code> of <code>int to int</code></dt>
+<dd>Dictioanry storing balances of each peer as calculated along the
+chain this block was mined on, from the genesis block to this block</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def store_checkpoint(self, checkpoint):
+    &#34;&#34;&#34;Records the checkpoint at this block
+
+    Args:
+        checkpoint (dict of int to int): Dictioanry storing balances of each peer as calculated along the 
+            chain this block was mined on, from the genesis block to this block
+    
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    self.checkpoint = checkpoint</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="p2p_code.Event"><code class="flex name class">
+<span>class <span class="ident">Event</span></span>
+<span>(</span><span>func, args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Event class instants represent an event to be executed in the event_queue</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>func</code></strong> :&ensp;<code>function</code></dt>
+<dd>Function to be executed which simulates event execution</dd>
+<dt><strong><code>args</code></strong> :&ensp;<code>dict</code> of <code>str to <a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code> or <code><a title="p2p_code.Transaction" href="#p2p_code.Transaction">Transaction</a></code></dt>
+<dd>Arguments for the function to be executed</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>func</code></strong> :&ensp;<code>function</code></dt>
+<dd>A receive_transaction, receive_block, create_transaction or create_block function
+corresponding to a particular peer</dd>
+<dt><strong><code>args</code></strong> :&ensp;<code>dict</code> of <code>str to <a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code> or <code><a title="p2p_code.Transaction" href="#p2p_code.Transaction">Transaction</a></code></dt>
+<dd>Dictionary contains the arguments needed for the function
+to be called</dd>
+<dt><strong><code>execute</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>A boolean value to toggle between executing and not executing the event. True by
+default</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Event:
+    &#34;&#34;&#34;Event class instants represent an event to be executed in the event_queue
+
+    Args:
+        func (function): Function to be executed which simulates event execution
+        args (dict of str to Block or Transaction): Arguments for the function to be executed
+
+    Attributes:
+        func (function): A receive_transaction, receive_block, create_transaction or create_block function 
+            corresponding to a particular peer
+        args (dict of str to Block or Transaction): Dictionary contains the arguments needed for the function 
+            to be called
+        execute (boolean): A boolean value to toggle between executing and not executing the event. True by 
+            default
+
+    &#34;&#34;&#34;
+
+    def __init__(self, func, args):
+        self.func = func
+        self.args = args
+        self.execute = True
+    
+    def execute_event(self):
+        &#34;&#34;&#34;Executes the stored function with the stored arguments if execute is True
+
+        Args:
+            None
+        
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        if self.execute:
+            self.func(self.args)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="p2p_code.Event.execute_event"><code class="name flex">
+<span>def <span class="ident">execute_event</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Executes the stored function with the stored arguments if execute is True</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute_event(self):
+    &#34;&#34;&#34;Executes the stored function with the stored arguments if execute is True
+
+    Args:
+        None
+    
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    if self.execute:
+        self.func(self.args)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="p2p_code.Peer"><code class="flex name class">
+<span>class <span class="ident">Peer</span></span>
+<span>(</span><span>idx, txn_inter_arrival_mean, mean_mining_time, peer_type, mining_fee, simulator, genesis_block)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Peer class instants represent a peer in the network</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>idx</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of the peer</dd>
+<dt><strong><code>txn_inter_arrival_mean</code></strong> :&ensp;<code>float</code></dt>
+<dd>Mean time between creation of two transactions</dd>
+<dt><strong><code>mean_mining_time</code></strong> :&ensp;<code>float</code></dt>
+<dd>Mean time between creation of two blocks</dd>
+<dt><strong><code>peer_type</code></strong> :&ensp;<code>str</code></dt>
+<dd>Takes values 'slow' or 'fast'</dd>
+<dt><strong><code>mining_fee</code></strong> :&ensp;<code>float</code></dt>
+<dd>Bitcoins paid to a miner on generation of a block</dd>
+<dt><strong><code>simulator</code></strong> :&ensp;<code><a title="p2p_code.Simulator" href="#p2p_code.Simulator">Simulator</a></code></dt>
+<dd>Reference to the simulator running the simulation </dd>
+<dt><strong><code>genesis_block</code></strong> :&ensp;<code><a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code></dt>
+<dd>Genesis block created by the simulator at the start of simulation</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>idx</code></strong> :&ensp;<code>int</code></dt>
+<dd>Peer ID in the network</dd>
+<dt><strong><code>Ttx</code></strong> :&ensp;<code>float</code></dt>
+<dd>Mean time between creation of transactions</dd>
+<dt><strong><code>mean_mining_time</code></strong> :&ensp;<code>float</code></dt>
+<dd>Mean time between creation of blocks</dd>
+<dt><strong><code>peer_type</code></strong> :&ensp;<code>str</code></dt>
+<dd>Takes values 'slow' or 'fast' </dd>
+<dt><strong><code>pending_txns</code></strong> :&ensp;<code>set</code> of <code><a title="p2p_code.Transaction" href="#p2p_code.Transaction">Transaction</a></code></dt>
+<dd>Set of transactions that can be included in a block being
+mined on the longest chain</dd>
+<dt><strong><code>pending_blocks</code></strong> :&ensp;<code>list</code> of <code><a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code></dt>
+<dd>List of received blocks whose parent has not been received yet</dd>
+<dt><strong><code>simulator</code></strong> :&ensp;<code><a title="p2p_code.Simulator" href="#p2p_code.Simulator">Simulator</a></code></dt>
+<dd>Reference to the simulator running the simulation</dd>
+<dt><strong><code>blocktree</code></strong> :&ensp;<code>list</code> of <code><a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code></dt>
+<dd>List of blocks that have been confirmed and added to this peer's
+version of the blockchain</dd>
+<dt><strong><code>next_block_creation_event</code></strong> :&ensp;<code><a title="p2p_code.Event" href="#p2p_code.Event">Event</a></code></dt>
+<dd>Event class object denoting the next event of creation of a
+block. Useful for cancelling block creation event that creates a block on a shorter chain</dd>
+<dt><strong><code>current_chain_end</code></strong> :&ensp;<code><a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code></dt>
+<dd>The block being mined on currently </dd>
+<dt><strong><code>mining_fee</code></strong> :&ensp;<code>float</code></dt>
+<dd>Money generated due to creation of one block</dd>
+<dt><strong><code>all_received_blocks</code></strong> :&ensp;<code>set</code> of <code><a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code></dt>
+<dd>Set of blocks that have been received to avoid re-addition to blockchain</dd>
+<dt><strong><code>total_blocks</code></strong> :&ensp;<code>int</code></dt>
+<dd>Total blocks generated by peer</dd>
+<dt><strong><code>total_txns</code></strong> :&ensp;<code>int</code></dt>
+<dd>Total transactions generated by peer</dd>
+<dt><strong><code>block_arrival_text</code></strong> :&ensp;<code>str</code></dt>
+<dd>Records the block hash, block number, time of arrival and parent block hash of
+every received block</dd>
+<dt><strong><code>blockchain_txns</code></strong> :&ensp;<code>int</code></dt>
+<dd>Total number of transactions in the blocktree</dd>
+<dt><strong><code>pending_txn_max_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>Maximum size of the pending_txns pool</dd>
+<dt><strong><code>pending_txn_option_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>Sums up the length of pending_txns at the time of choosing a set of
+transactions to include in a block being mined. Used to find average size of pending_txns pool
+at time of mining</dd>
+<dt><strong><code>number_of_mines</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of times a set of transactions was chosen for a block to be mined</dd>
+<dt><strong><code>neighbours</code></strong> :&ensp;<code>dict</code> of <code><a title="p2p_code.Peer" href="#p2p_code.Peer">Peer</a> to set</code> of <code><a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code> or <code><a title="p2p_code.Transaction" href="#p2p_code.Transaction">Transaction</a></code></dt>
+<dd>Dictionary recording what messages have been
+sent to each of its immediate neighbours or peers</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Peer:
+    &#34;&#34;&#34;Peer class instants represent a peer in the network
+
+    Args:
+        idx (int): ID of the peer
+        txn_inter_arrival_mean (float): Mean time between creation of two transactions
+        mean_mining_time (float): Mean time between creation of two blocks
+        peer_type (str): Takes values &#39;slow&#39; or &#39;fast&#39;
+        mining_fee (float): Bitcoins paid to a miner on generation of a block
+        simulator (Simulator): Reference to the simulator running the simulation 
+        genesis_block (Block): Genesis block created by the simulator at the start of simulation
+
+    Attributes:
+        idx (int): Peer ID in the network
+        Ttx (float): Mean time between creation of transactions
+        mean_mining_time (float): Mean time between creation of blocks
+        peer_type (str): Takes values &#39;slow&#39; or &#39;fast&#39; 
+        pending_txns (set of Transaction): Set of transactions that can be included in a block being 
+            mined on the longest chain
+        pending_blocks (list of Block): List of received blocks whose parent has not been received yet
+        simulator (Simulator): Reference to the simulator running the simulation
+        blocktree (list of Block): List of blocks that have been confirmed and added to this peer&#39;s 
+            version of the blockchain
+        next_block_creation_event (Event): Event class object denoting the next event of creation of a 
+            block. Useful for cancelling block creation event that creates a block on a shorter chain
+        current_chain_end (Block): The block being mined on currently 
+        mining_fee (float): Money generated due to creation of one block
+        all_received_blocks (set of Block): Set of blocks that have been received to avoid re-addition to blockchain
+        total_blocks (int): Total blocks generated by peer
+        total_txns (int): Total transactions generated by peer
+        block_arrival_text (str): Records the block hash, block number, time of arrival and parent block hash of
+            every received block
+        blockchain_txns (int): Total number of transactions in the blocktree
+        pending_txn_max_size (int): Maximum size of the pending_txns pool
+        pending_txn_option_size (int): Sums up the length of pending_txns at the time of choosing a set of
+            transactions to include in a block being mined. Used to find average size of pending_txns pool
+            at time of mining
+        number_of_mines (int): Number of times a set of transactions was chosen for a block to be mined
+        neighbours (dict of Peer to set of Block or Transaction): Dictionary recording what messages have been 
+            sent to each of its immediate neighbours or peers
+
+    &#34;&#34;&#34;
+
+    def __init__(self, idx, txn_inter_arrival_mean, mean_mining_time, peer_type, mining_fee, simulator, genesis_block):
+        self.idx = idx 
+        self.Ttx = txn_inter_arrival_mean
+        self.mean_mining_time = mean_mining_time
+        self.peer_type = peer_type 
+        self.pending_txns = set() 
+        self.pending_blocks = []
+        self.simulator = simulator
+        self.blocktree = [genesis_block]
+        self.next_block_creation_event = None 
+        self.current_chain_end = self.blocktree[0]
+        self.mining_fee = mining_fee
+        self.all_received_blocks=set()
+        self.total_blocks=0
+        self.total_txns=0
+        self.block_arrival_text=&#34;&#34;
+        self.blockchain_txns=0
+        self.pending_txn_max_size=0
+        self.pending_txn_option_size = 0
+        self.number_of_mines=0
+
+    def initialise_neighbours(self, neighbours):
+        &#34;&#34;&#34;Initialises the immediate neighbours and the set of messages sent to each of them to empty set
+
+        Args:
+            neighbours (list of Peer): List of Peer objects representing immediate neighbours in network
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        self.neighbours = {nei : set() for nei in neighbours} ## dict of peers : msg sent from us to them
+
+    def broadcast(self, msg):
+        &#34;&#34;&#34;Given a message, forwards it to neighbours who have not received it from this peer 
+        and who have not sent it to this peer
+
+        Args:
+            msg (Block or Transaction): A Block object or Transaction object 
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        for neighbour, sent in self.neighbours.items():
+            if msg not in sent and msg not in neighbour.neighbours[self]:
+                latency = self.simulator.calc_latency(self.peer_type, neighbour.peer_type, msg.size,self.simulator.rho[self.idx,neighbour.idx])
+                receiving_time = round(self.simulator.current_time + latency,2)
+                if isinstance(msg, Transaction):
+                    func = neighbour.receive_transaction
+                    args = {&#34;txn&#34; : msg}
+                else:
+                    func = neighbour.receive_block
+                    args = {&#34;block&#34; : msg}
+                self.simulator.add_event(Event(func,args), receiving_time)
+                sent.add(msg)
+        
+    def create_transaction(self, args):
+        &#34;&#34;&#34;Creates a transaction 
+
+        Args:
+            args (None): Added for uniformity
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        # Samples from the exponential distribution
+        # Returns Id_y, C, and the time of transaction
+        current_peers = list(range(self.simulator.cfg[&#34;num_peers&#34;]))
+        current_peers.remove(self.idx)
+        idy = np.random.choice(current_peers)
+        txn_id = uuid1()
+        if self.idx in self.current_chain_end.checkpoint:
+            coins = np.random.uniform(0, self.current_chain_end.checkpoint[self.idx]/100000)
+        else:
+            coins = 0 
+        new_txn = Transaction(txn_id, self.idx, idy, coins)
+        self.pending_txns.add(new_txn)
+        self.pending_txn_max_size = max(self.pending_txn_max_size,len(self.pending_txns))
+        self.broadcast(new_txn)
+        self.total_txns+=1
+        next_txn_time = round(self.simulator.current_time+np.random.exponential(self.Ttx),2)
+        create_txn_event = Event(self.create_transaction,{})
+        self.simulator.add_event(create_txn_event, next_txn_time)
+
+    
+    def mine_block(self):
+        &#34;&#34;&#34;Creates a block creation event and adds it to the simulator&#39;s event_queue so as to 
+        create a block in the future
+
+        Args:
+            None
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        coinbase_id = uuid1()
+        coinbase = Transaction(coinbase_id,None,self.idx,self.mining_fee)
+        num_of_transactions = min(1024,len(self.pending_txns)+1)-1#np.random.randint(0,min(1024,len(self.pending_txns)+1))
+        self.pending_txn_option_size +=len(self.pending_txns)
+        self.number_of_mines+=1
+        curr_block_txns = list(np.random.choice(list(self.pending_txns),size=num_of_transactions,replace=False))
+        curr_block_txns = [coinbase]+curr_block_txns
+        checkpoint = self.current_chain_end.checkpoint.copy()
+        checkpoint, txn_idx = self.get_new_checkpoint(checkpoint, curr_block_txns,mining=True)
+        blkid = uuid1()
+        args = {&#34;block&#34;: Block(blkid, self.current_chain_end, curr_block_txns[:txn_idx], self.idx, False,self.simulator.cfg[&#34;num_peers&#34;])}
+        creation_time = round(self.simulator.current_time + np.random.exponential(self.mean_mining_time),2)
+        block_create_event = Event(self.create_block,args)
+        self.next_block_creation_event = block_create_event 
+        self.simulator.add_event(block_create_event, creation_time)
+        
+
+    def create_block(self, args):
+        &#34;&#34;&#34;Creates a block 
+
+        Args:
+            args (dict of str to Block): Dictionary containing the Block object that needs to be added to the blockchain
+                and also broadcasted
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        block = args[&#34;block&#34;]
+        checkpoint = (block.parent).checkpoint.copy()
+        checkpoint = self.get_new_checkpoint(checkpoint, block.txns)
+        block.store_checkpoint(checkpoint)
+        self.blocktree.append(block)
+        self.blockchain_txns+=len(block.txns)
+        self.current_chain_end = block
+        self.pending_txns -= set(block.txns)
+        self.broadcast(block)
+        self.total_blocks+=1
+        self.mine_block()
+        print(&#34;Block created at time {} with id : {} by Peer ID : {}&#34;.format(self.simulator.current_time,block.blkid,self.idx))
+    
+    def start_mining(self,args):
+        &#34;&#34;&#34;Starts the mining process. Used by simulator&#39;s event_queue to initialise the event_queue
+
+        Args:
+            args (None): Added for uniformity
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        self.mine_block()
+
+    def update_checkpoint(self, txn, checkpoint): 
+        &#34;&#34;&#34;Given a transaction and a dictionary of balances for each pair it updates the balances 
+        of the peers involved in the transaction
+
+        Args:
+            txn (Transaction): The transaction which states the sender, receiver peers and the amount of 
+                bitcoins involved
+            checkpoint (dict of int to int): Dictionary storing balances in the form of {peer_id : balance} format
+        
+        Returns:
+            Updated checkpoint with changed balances or None if any balance becomes negative due to the transaction
+
+        &#34;&#34;&#34;
+        if txn.sender is not None:
+            if txn.sender in checkpoint:
+                checkpoint[txn.sender] -= txn.coins
+                if txn.receiver in checkpoint:
+                    checkpoint[txn.receiver] += txn.coins
+                else:
+                    checkpoint[txn.receiver] = txn.coins
+                if checkpoint[txn.sender] &lt; 0:
+                    return None 
+            else:
+                return None 
+        else:
+            ## Coinbase txn
+            if txn.receiver in checkpoint:
+                checkpoint[txn.receiver] += txn.coins
+            else:
+                checkpoint[txn.receiver] = txn.coins
+            
+        return checkpoint
+        
+    def get_new_checkpoint(self, checkpoint, txns, mining=False):
+        &#34;&#34;&#34;Given a list of transactions and an initial checkpoint, generates the updated checkpoint after 
+        processing all transactions. 
+
+        Args:
+            checkpoint (dict of int to int): Conatins balances for each peer in the format {peer_id : balance}
+            txns (list of Transaction): List of Transaction objects 
+            mining (boolean): Boolean value to control output. Refer to Returns section
+
+        Returns:
+            If mining is True, then it returns the index of transactions upto which the balances remain non-
+            negative and the resulting updated checkpoint.
+            If mining is False, then it checks through all transactions and returns updated checkpoint only
+            if balances remain non-negative else None
+            
+        &#34;&#34;&#34;
+        txn_idx = 0
+        for txn in txns:
+            temp_checkpoint = checkpoint.copy()
+            checkpoint = self.update_checkpoint(txn, checkpoint)
+            if checkpoint is None:
+                if mining:
+                    return temp_checkpoint, txn_idx
+                return None
+            txn_idx+=1
+        if mining:
+            return checkpoint, txn_idx
+        return checkpoint
+
+    def receive_transaction(self, args):
+        &#34;&#34;&#34;Receives a transaction from a neighbour peer
+
+        Args:
+            args (dict of str to Transaction): Dictionary containing the Transaction object.
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        txn = args[&#34;txn&#34;]
+        self.broadcast(txn)
+        if txn not in self.current_chain_end.seen_txns:
+            self.pending_txns.add(txn)
+            self.pending_txn_max_size = max(self.pending_txn_max_size,len(self.pending_txns))
+    
+    def add_pending_blocks(self, new_block):
+        &#34;&#34;&#34;Adds pending blocks (whose parents haven&#39;t arrived) to the blockchain on addition of a 
+        new block to the blockchain
+
+        Args:
+            new_block (Block): Block object that has been received and added to the blockchain. It can trigger 
+                addition of some pending blocks
+        
+        Returns:
+            Amongst the newly added blocks, it returns the one with maximum chain length (or height) in the blockchain
+
+        &#34;&#34;&#34;
+        foliage = set(self.pending_blocks)
+        foliage.add(new_block)
+        max_chain_length_block=new_block
+        check_blocks = {new_block}
+        visited_adding = [(0,0)]*len(self.pending_blocks)
+        blk_idx = {blk : i for i, blk in enumerate(self.pending_blocks)}
+        p_idx = 0
+        while p_idx&lt;len(self.pending_blocks):
+            if visited_adding[p_idx][0]!=1:
+                temp=[]
+                judgement = None 
+                cur_block = self.pending_blocks[p_idx]
+                invalid = False
+                while True:
+                    if cur_block==new_block:
+                        judgement=True
+                        break
+                    elif visited_adding[blk_idx[cur_block]]==(1,0):
+                        judgement=False
+                        break
+                    elif visited_adding[blk_idx[cur_block]]==(1,-1):
+                        judgement=True 
+                        invalid=True
+                        break
+                    elif visited_adding[blk_idx[cur_block]]==(1,1):
+                        judgement=True
+                        break
+                    elif cur_block.parent in foliage:
+                        temp.append(blk_idx[cur_block])
+                        cur_block = cur_block.parent
+                    else:
+                        temp.append(blk_idx[cur_block])
+                        judgement = False 
+                        break
+                if judgement:
+                    for idx in temp[::-1]:
+                        if invalid:
+                            visited_adding[idx] = (1,-1)
+                            continue
+                        blk = self.pending_blocks[idx]
+                        checkpoint = blk.parent.checkpoint.copy()
+                        checkpoint = self.get_new_checkpoint(checkpoint,blk.txns)
+                        if checkpoint:
+                            blk.store_checkpoint(checkpoint)
+                            visited_adding[idx] = (1,1)
+                            if blk.chain_length &gt; max_chain_length_block.chain_length:
+                                max_chain_length_block = blk
+                        else:
+                            visited_adding[idx] = (1,-1)
+                            invalid=True
+                else:
+                    for idx in temp:
+                        visited_adding[idx]=(1,0)
+            p_idx+=1
+        
+        for i, dec in enumerate(visited_adding):
+            if dec==(1,1):
+                self.blocktree.append(self.pending_blocks[i])
+                (self.pending_blocks[i]).parent.seen_its_child(self.idx)
+                self.blockchain_txns+=len(self.pending_blocks[i].txns)
+        self.pending_blocks = [self.pending_blocks[i] for i, dec in enumerate(visited_adding) if dec == (1,0)]
+        return max_chain_length_block
+
+    def receive_block(self, args):
+        &#34;&#34;&#34;Receives a block, validates and adds it to the blockchain if it is a valid block
+
+        Args:
+            args (dict of str to Block): Dictionary containing the received block
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        block = args[&#34;block&#34;]
+        if block in self.all_received_blocks:
+            return
+        self.all_received_blocks.add(block)
+        self.block_arrival_text+=&#34;{}, {}, {} sec, {}\n&#34;.format(block.blkid,block.chain_length-1,self.simulator.current_time/1000,block.parent.blkid)
+        if block.parent not in self.blocktree:
+            self.pending_blocks.append(block)
+            self.broadcast(block)
+        else:
+            checkpoint = (block.parent).checkpoint.copy()
+            checkpoint = self.get_new_checkpoint(checkpoint, block.txns)
+            if checkpoint:
+                self.broadcast(block)
+                block.store_checkpoint(checkpoint)
+                self.blocktree.append(block)
+                self.blockchain_txns+=len(block.txns)
+                block.parent.seen_its_child(self.idx)
+                if block.parent == self.current_chain_end:
+                    if self.next_block_creation_event is not None:
+                        self.next_block_creation_event.execute = False
+                    self.pending_txns -= set(block.txns)
+                    self.current_chain_end = block
+                    temp_chain_end=self.add_pending_blocks(block)
+                    if temp_chain_end != self.current_chain_end:
+                        pointer = temp_chain_end
+                        while pointer != self.current_chain_end:
+                            self.pending_txns -= set(pointer.txns)
+                            pointer = pointer.parent
+                    self.current_chain_end = temp_chain_end
+                    self.mine_block()
+                else:
+                    temp_chain_end=self.add_pending_blocks(block)
+                    if temp_chain_end.chain_length &gt; self.current_chain_end.chain_length:
+                        if self.next_block_creation_event is not None:
+                            self.next_block_creation_event.execute = False
+                        self.pending_txns -= temp_chain_end.seen_txns
+                        self.current_chain_end = temp_chain_end
+                        self.mine_block()
+    
+    def get_stats(self):
+        &#34;&#34;&#34;Calculates the number of blocks each peer has in the longest chain
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        blocks_per_peer = [0]*(self.simulator.cfg[&#34;num_peers&#34;])
+        cur_block = self.current_chain_end
+        while cur_block.blkid!=&#34;GENESIS&#34;:
+            blocks_per_peer[cur_block.creator_id]+=1
+            cur_block=cur_block.parent
+        return blocks_per_peer
+        
+
+    def show_blocktree(self):  
+        &#34;&#34;&#34;Creates a graphical representation of the blockchain for users to visualize
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        tree = nx.DiGraph()  
+        for block in self.blocktree:
+            tree.add_node(block.blkid,status=&#34;Branch_block&#34;)
+        for block in self.blocktree:
+            if block.blkid!=&#34;GENESIS&#34;:
+                tree.add_edge(block.blkid,block.parent.blkid)
+        cur_block = self.current_chain_end
+        while cur_block.blkid!=&#34;GENESIS&#34;:
+            tree.nodes[cur_block.blkid][&#34;status&#34;] = &#34;Longest_chain_block&#34;
+            cur_block = cur_block.parent
+        tree.nodes[&#34;GENESIS&#34;][&#34;status&#34;] = &#34;GENESIS_block&#34;
+        node_color = []
+        genesis_color, longest_chain_color, branch_color = &#39;yellow&#39;, &#39;red&#39;, &#39;blue&#39;
+        for node in tree.nodes(data=True):
+            if &#39;Branch_block&#39; == node[1][&#39;status&#39;]:
+                node_color.append(branch_color)
+            elif &#39;Longest_chain_block&#39; == node[1][&#39;status&#39;]:
+                node_color.append(longest_chain_color)
+            elif &#39;GENESIS_block&#39; == node[1][&#39;status&#39;]:
+                node_color.append(genesis_color)
+        nx.draw_networkx(tree, with_labels=False, node_size=10, node_color=node_color, width=0.5, arrowsize=5)
+        genesis_patch = mpatches.Patch(color=genesis_color, label=&#39;Genesis block&#39;)
+        longest_patch = mpatches.Patch(color=longest_chain_color, label=&#39;Longest Chain block&#39;)
+        branch_patch = mpatches.Patch(color=branch_color, label=&#39;Branch block&#39;)
+        plt.legend(handles=[genesis_patch, longest_patch, branch_patch], loc=&#34;upper right&#34;)        
+        # plt.savefig(&#39;blockchain_{}_{}.png&#39;.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+        plt.show()
+
+    def show_fraction_of_chain(self):
+        &#34;&#34;&#34;Displays a bar graph showing the fraction of blocks created by each peer in this peer&#39;s
+        version of the blockchain
+
+        Args:
+            None
+        
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        blocks_per_peer = self.get_stats()
+        y = [num/self.current_chain_end.chain_length for num in blocks_per_peer]
+        x = [&#34;peer_{}\nHp:{}\n{}&#34;.format(idx,self.simulator.hashing_fractions[idx],self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg[&#34;num_peers&#34;])]
+        fig = plt.figure(figsize = (10, 5))
+        plt.bar(x, y, color =&#39;blue&#39;,width = 0.4)
+        for index, value in enumerate(y):
+            value = round(value,3)
+            plt.text(index , 1.02*value,&#39;%f&#39; % value, ha=&#39;center&#39;, va=&#39;bottom&#39;)
+        plt.xticks(x)
+        plt.xlabel(&#34;Peer ID&#34;)
+        plt.ylabel(&#34;Fraction of Longest chain&#34;)
+        plt.title(&#34;Fraction of longest chain produced per peer&#34;)
+        # plt.savefig(&#39;chain_fraction_{}_{}.png&#39;.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+        plt.show()
+
+    def show_fraction_of_total_blocks(self):
+        &#34;&#34;&#34;Displays a bar graph showing the fraction of blocks created by each peer that got into 
+        this peer&#39;s version of the blockchain
+
+        Args:
+            None
+        
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        blocks_per_peer = self.get_stats()
+        y=[]
+        for i, num in enumerate(blocks_per_peer):
+            blocks_produced = self.simulator.peer_list[i].total_blocks
+            if blocks_produced!=0:
+                y.append(num/blocks_produced)
+            else:
+                y.append(0)
+        x = [&#34;peer_{}\nHp:{}\n{}&#34;.format(idx,self.simulator.hashing_fractions[idx],self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg[&#34;num_peers&#34;])]
+        fig = plt.figure(figsize = (10, 5))
+        plt.bar(x, y, color =&#39;blue&#39;,width = 0.4)
+        for index, value in enumerate(y):
+            value = round(value,3)
+            plt.text(index , 1.02*value,&#39;%f&#39; % value, ha=&#39;center&#39;, va=&#39;bottom&#39;)
+        plt.xticks(x)
+        plt.xlabel(&#34;Peer ID&#34;)
+        plt.ylabel(&#34;Fraction of total blocks&#34;)
+        plt.title(&#34;Fraction of Total blocks that went into Longest chain per peer&#34;)
+        # plt.savefig(&#39;success_fraction_{}_{}.png&#39;.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+        plt.show()
+    
+    def write_block_arrival_time(self):
+        &#34;&#34;&#34;Writes the block arrival data to a text file
+
+        Args:
+            None
+        
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        folder = self.simulator.cfg[&#34;text_files_folder&#34;]
+        target = os.path.join(folder,os.path.basename(self.simulator.cfg_filename))
+        if not os.path.isdir(target):
+            os.mkdir(target)
+        with open(os.path.join(target,&#34;peer_{}.txt&#34;.format(self.idx)),&#39;w&#39;) as fp:
+            fp.write(&#34;blockHash, blockNum, TimeOfArrival, parentBlockHash\n&#34;+self.block_arrival_text)
+    
+    def get_branch_lengths(self):
+        &#34;&#34;&#34;Displays a bar graph showing the lengths of all the side branches (orphaned chains) 
+        and the longest chain in this peers version of the blockchain
+
+        Args:
+            None
+        
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        is_parent = {block : 0 for block in self.blocktree}
+        for block in self.blocktree:
+            if block!=self.simulator.genesis_block:
+                is_parent[block.parent]=1
+        longest_chain_idx = 0
+        y=[]
+        for block, val in is_parent.items():
+            if val==0:
+                y.append(block.chain_length)
+                if block == self.current_chain_end:
+                    longest_chain_idx = len(y)-1
+                
+        x=[&#34;SB_{}&#34;.format(i) for i in range(longest_chain_idx)]+[&#34;MB&#34;]+[&#34;SB_{}&#34;.format(i) for i in range(longest_chain_idx,len(y)-1)]
+        fig = plt.figure(figsize = (10, 5))
+        plt.bar(x, y, color =&#39;blue&#39;,width = 0.4)
+        for index, value in enumerate(y):
+            plt.text(index , 1.02*value,&#39;%d&#39; % int(value), ha=&#39;center&#39;, va=&#39;bottom&#39;)
+        plt.xticks(x)
+        plt.xlabel(&#34;Branches (SB : Side Branch ; MB : Main Branch)&#34;)
+        plt.ylabel(&#34;Length in number of blocks&#34;)
+        plt.title(&#34;Length of Blockchain branches&#34;)
+        # plt.savefig(&#39;branch_lengths_{}_{}.png&#39;.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+        plt.show()
+        
+    def show_final_stats(self):
+        &#34;&#34;&#34;Calls the plotting functions all together. Also displays some data regarding the average number of 
+        transactions included in each block in the blockchain, the maximum size of the pending transactions pool
+        and the average size of the pending transactions pool when mining a block
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        print(&#34;&#34;.join([&#39;*&#39;]*30)+&#34;Peer ID {}&#34;.format(self.idx)+&#34;&#34;.join([&#39;*&#39;]*30))
+        self.show_blocktree()
+        self.show_fraction_of_chain() 
+        self.show_fraction_of_total_blocks()
+        self.get_branch_lengths()
+        print(&#34;Average Number of Transactions per block in entire blockchain for Peer ID {} : {}&#34;.format(self.idx,self.blockchain_txns/len(self.blocktree)))
+        print(&#34;Max Size of pending txn pool for Peer ID {} : {}&#34;.format(self.idx,self.pending_txn_max_size))
+        print(&#34;Average size of transaction pool at time of choosing txns is {}\n&#34;.format(self.pending_txn_option_size/self.number_of_mines))</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="p2p_code.Peer.add_pending_blocks"><code class="name flex">
+<span>def <span class="ident">add_pending_blocks</span></span>(<span>self, new_block)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds pending blocks (whose parents haven't arrived) to the blockchain on addition of a
+new block to the blockchain</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>new_block</code></strong> :&ensp;<code><a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code></dt>
+<dd>Block object that has been received and added to the blockchain. It can trigger
+addition of some pending blocks</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Amongst the newly added blocks, it returns the one with maximum chain length (or height) in the blockchain</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_pending_blocks(self, new_block):
+    &#34;&#34;&#34;Adds pending blocks (whose parents haven&#39;t arrived) to the blockchain on addition of a 
+    new block to the blockchain
+
+    Args:
+        new_block (Block): Block object that has been received and added to the blockchain. It can trigger 
+            addition of some pending blocks
+    
+    Returns:
+        Amongst the newly added blocks, it returns the one with maximum chain length (or height) in the blockchain
+
+    &#34;&#34;&#34;
+    foliage = set(self.pending_blocks)
+    foliage.add(new_block)
+    max_chain_length_block=new_block
+    check_blocks = {new_block}
+    visited_adding = [(0,0)]*len(self.pending_blocks)
+    blk_idx = {blk : i for i, blk in enumerate(self.pending_blocks)}
+    p_idx = 0
+    while p_idx&lt;len(self.pending_blocks):
+        if visited_adding[p_idx][0]!=1:
+            temp=[]
+            judgement = None 
+            cur_block = self.pending_blocks[p_idx]
+            invalid = False
+            while True:
+                if cur_block==new_block:
+                    judgement=True
+                    break
+                elif visited_adding[blk_idx[cur_block]]==(1,0):
+                    judgement=False
+                    break
+                elif visited_adding[blk_idx[cur_block]]==(1,-1):
+                    judgement=True 
+                    invalid=True
+                    break
+                elif visited_adding[blk_idx[cur_block]]==(1,1):
+                    judgement=True
+                    break
+                elif cur_block.parent in foliage:
+                    temp.append(blk_idx[cur_block])
+                    cur_block = cur_block.parent
+                else:
+                    temp.append(blk_idx[cur_block])
+                    judgement = False 
+                    break
+            if judgement:
+                for idx in temp[::-1]:
+                    if invalid:
+                        visited_adding[idx] = (1,-1)
+                        continue
+                    blk = self.pending_blocks[idx]
+                    checkpoint = blk.parent.checkpoint.copy()
+                    checkpoint = self.get_new_checkpoint(checkpoint,blk.txns)
+                    if checkpoint:
+                        blk.store_checkpoint(checkpoint)
+                        visited_adding[idx] = (1,1)
+                        if blk.chain_length &gt; max_chain_length_block.chain_length:
+                            max_chain_length_block = blk
+                    else:
+                        visited_adding[idx] = (1,-1)
+                        invalid=True
+            else:
+                for idx in temp:
+                    visited_adding[idx]=(1,0)
+        p_idx+=1
+    
+    for i, dec in enumerate(visited_adding):
+        if dec==(1,1):
+            self.blocktree.append(self.pending_blocks[i])
+            (self.pending_blocks[i]).parent.seen_its_child(self.idx)
+            self.blockchain_txns+=len(self.pending_blocks[i].txns)
+    self.pending_blocks = [self.pending_blocks[i] for i, dec in enumerate(visited_adding) if dec == (1,0)]
+    return max_chain_length_block</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.broadcast"><code class="name flex">
+<span>def <span class="ident">broadcast</span></span>(<span>self, msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a message, forwards it to neighbours who have not received it from this peer
+and who have not sent it to this peer</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>msg</code></strong> :&ensp;<code><a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code> or <code><a title="p2p_code.Transaction" href="#p2p_code.Transaction">Transaction</a></code></dt>
+<dd>A Block object or Transaction object </dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def broadcast(self, msg):
+    &#34;&#34;&#34;Given a message, forwards it to neighbours who have not received it from this peer 
+    and who have not sent it to this peer
+
+    Args:
+        msg (Block or Transaction): A Block object or Transaction object 
+
+    Returns:
+        None
+        
+    &#34;&#34;&#34;
+    for neighbour, sent in self.neighbours.items():
+        if msg not in sent and msg not in neighbour.neighbours[self]:
+            latency = self.simulator.calc_latency(self.peer_type, neighbour.peer_type, msg.size,self.simulator.rho[self.idx,neighbour.idx])
+            receiving_time = round(self.simulator.current_time + latency,2)
+            if isinstance(msg, Transaction):
+                func = neighbour.receive_transaction
+                args = {&#34;txn&#34; : msg}
+            else:
+                func = neighbour.receive_block
+                args = {&#34;block&#34; : msg}
+            self.simulator.add_event(Event(func,args), receiving_time)
+            sent.add(msg)</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.create_block"><code class="name flex">
+<span>def <span class="ident">create_block</span></span>(<span>self, args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a block </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>args</code></strong> :&ensp;<code>dict</code> of <code>str to <a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code></dt>
+<dd>Dictionary containing the Block object that needs to be added to the blockchain
+and also broadcasted</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_block(self, args):
+    &#34;&#34;&#34;Creates a block 
+
+    Args:
+        args (dict of str to Block): Dictionary containing the Block object that needs to be added to the blockchain
+            and also broadcasted
+
+    Returns:
+        None
+        
+    &#34;&#34;&#34;
+    block = args[&#34;block&#34;]
+    checkpoint = (block.parent).checkpoint.copy()
+    checkpoint = self.get_new_checkpoint(checkpoint, block.txns)
+    block.store_checkpoint(checkpoint)
+    self.blocktree.append(block)
+    self.blockchain_txns+=len(block.txns)
+    self.current_chain_end = block
+    self.pending_txns -= set(block.txns)
+    self.broadcast(block)
+    self.total_blocks+=1
+    self.mine_block()
+    print(&#34;Block created at time {} with id : {} by Peer ID : {}&#34;.format(self.simulator.current_time,block.blkid,self.idx))</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.create_transaction"><code class="name flex">
+<span>def <span class="ident">create_transaction</span></span>(<span>self, args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a transaction </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>args</code></strong> :&ensp;<code>None</code></dt>
+<dd>Added for uniformity</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_transaction(self, args):
+    &#34;&#34;&#34;Creates a transaction 
+
+    Args:
+        args (None): Added for uniformity
+
+    Returns:
+        None
+        
+    &#34;&#34;&#34;
+    # Samples from the exponential distribution
+    # Returns Id_y, C, and the time of transaction
+    current_peers = list(range(self.simulator.cfg[&#34;num_peers&#34;]))
+    current_peers.remove(self.idx)
+    idy = np.random.choice(current_peers)
+    txn_id = uuid1()
+    if self.idx in self.current_chain_end.checkpoint:
+        coins = np.random.uniform(0, self.current_chain_end.checkpoint[self.idx]/100000)
+    else:
+        coins = 0 
+    new_txn = Transaction(txn_id, self.idx, idy, coins)
+    self.pending_txns.add(new_txn)
+    self.pending_txn_max_size = max(self.pending_txn_max_size,len(self.pending_txns))
+    self.broadcast(new_txn)
+    self.total_txns+=1
+    next_txn_time = round(self.simulator.current_time+np.random.exponential(self.Ttx),2)
+    create_txn_event = Event(self.create_transaction,{})
+    self.simulator.add_event(create_txn_event, next_txn_time)</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.get_branch_lengths"><code class="name flex">
+<span>def <span class="ident">get_branch_lengths</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Displays a bar graph showing the lengths of all the side branches (orphaned chains)
+and the longest chain in this peers version of the blockchain</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_branch_lengths(self):
+    &#34;&#34;&#34;Displays a bar graph showing the lengths of all the side branches (orphaned chains) 
+    and the longest chain in this peers version of the blockchain
+
+    Args:
+        None
+    
+    Returns:
+        None
+        
+    &#34;&#34;&#34;
+    is_parent = {block : 0 for block in self.blocktree}
+    for block in self.blocktree:
+        if block!=self.simulator.genesis_block:
+            is_parent[block.parent]=1
+    longest_chain_idx = 0
+    y=[]
+    for block, val in is_parent.items():
+        if val==0:
+            y.append(block.chain_length)
+            if block == self.current_chain_end:
+                longest_chain_idx = len(y)-1
+            
+    x=[&#34;SB_{}&#34;.format(i) for i in range(longest_chain_idx)]+[&#34;MB&#34;]+[&#34;SB_{}&#34;.format(i) for i in range(longest_chain_idx,len(y)-1)]
+    fig = plt.figure(figsize = (10, 5))
+    plt.bar(x, y, color =&#39;blue&#39;,width = 0.4)
+    for index, value in enumerate(y):
+        plt.text(index , 1.02*value,&#39;%d&#39; % int(value), ha=&#39;center&#39;, va=&#39;bottom&#39;)
+    plt.xticks(x)
+    plt.xlabel(&#34;Branches (SB : Side Branch ; MB : Main Branch)&#34;)
+    plt.ylabel(&#34;Length in number of blocks&#34;)
+    plt.title(&#34;Length of Blockchain branches&#34;)
+    # plt.savefig(&#39;branch_lengths_{}_{}.png&#39;.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.get_new_checkpoint"><code class="name flex">
+<span>def <span class="ident">get_new_checkpoint</span></span>(<span>self, checkpoint, txns, mining=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a list of transactions and an initial checkpoint, generates the updated checkpoint after
+processing all transactions. </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>checkpoint</code></strong> :&ensp;<code>dict</code> of <code>int to int</code></dt>
+<dd>Conatins balances for each peer in the format {peer_id : balance}</dd>
+<dt><strong><code>txns</code></strong> :&ensp;<code>list</code> of <code><a title="p2p_code.Transaction" href="#p2p_code.Transaction">Transaction</a></code></dt>
+<dd>List of Transaction objects </dd>
+<dt><strong><code>mining</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>Boolean value to control output. Refer to Returns section</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>If mining is True, then it returns the index of transactions upto which the balances remain non-
+negative and the resulting updated checkpoint.
+If mining is False, then it checks through all transactions and returns updated checkpoint only
+if balances remain non-negative else None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_new_checkpoint(self, checkpoint, txns, mining=False):
+    &#34;&#34;&#34;Given a list of transactions and an initial checkpoint, generates the updated checkpoint after 
+    processing all transactions. 
+
+    Args:
+        checkpoint (dict of int to int): Conatins balances for each peer in the format {peer_id : balance}
+        txns (list of Transaction): List of Transaction objects 
+        mining (boolean): Boolean value to control output. Refer to Returns section
+
+    Returns:
+        If mining is True, then it returns the index of transactions upto which the balances remain non-
+        negative and the resulting updated checkpoint.
+        If mining is False, then it checks through all transactions and returns updated checkpoint only
+        if balances remain non-negative else None
+        
+    &#34;&#34;&#34;
+    txn_idx = 0
+    for txn in txns:
+        temp_checkpoint = checkpoint.copy()
+        checkpoint = self.update_checkpoint(txn, checkpoint)
+        if checkpoint is None:
+            if mining:
+                return temp_checkpoint, txn_idx
+            return None
+        txn_idx+=1
+    if mining:
+        return checkpoint, txn_idx
+    return checkpoint</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.get_stats"><code class="name flex">
+<span>def <span class="ident">get_stats</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculates the number of blocks each peer has in the longest chain</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_stats(self):
+    &#34;&#34;&#34;Calculates the number of blocks each peer has in the longest chain
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    blocks_per_peer = [0]*(self.simulator.cfg[&#34;num_peers&#34;])
+    cur_block = self.current_chain_end
+    while cur_block.blkid!=&#34;GENESIS&#34;:
+        blocks_per_peer[cur_block.creator_id]+=1
+        cur_block=cur_block.parent
+    return blocks_per_peer</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.initialise_neighbours"><code class="name flex">
+<span>def <span class="ident">initialise_neighbours</span></span>(<span>self, neighbours)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initialises the immediate neighbours and the set of messages sent to each of them to empty set</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>neighbours</code></strong> :&ensp;<code>list</code> of <code><a title="p2p_code.Peer" href="#p2p_code.Peer">Peer</a></code></dt>
+<dd>List of Peer objects representing immediate neighbours in network</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initialise_neighbours(self, neighbours):
+    &#34;&#34;&#34;Initialises the immediate neighbours and the set of messages sent to each of them to empty set
+
+    Args:
+        neighbours (list of Peer): List of Peer objects representing immediate neighbours in network
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    self.neighbours = {nei : set() for nei in neighbours} ## dict of peers : msg sent from us to them</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.mine_block"><code class="name flex">
+<span>def <span class="ident">mine_block</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a block creation event and adds it to the simulator's event_queue so as to
+create a block in the future</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mine_block(self):
+    &#34;&#34;&#34;Creates a block creation event and adds it to the simulator&#39;s event_queue so as to 
+    create a block in the future
+
+    Args:
+        None
+
+    Returns:
+        None
+        
+    &#34;&#34;&#34;
+    coinbase_id = uuid1()
+    coinbase = Transaction(coinbase_id,None,self.idx,self.mining_fee)
+    num_of_transactions = min(1024,len(self.pending_txns)+1)-1#np.random.randint(0,min(1024,len(self.pending_txns)+1))
+    self.pending_txn_option_size +=len(self.pending_txns)
+    self.number_of_mines+=1
+    curr_block_txns = list(np.random.choice(list(self.pending_txns),size=num_of_transactions,replace=False))
+    curr_block_txns = [coinbase]+curr_block_txns
+    checkpoint = self.current_chain_end.checkpoint.copy()
+    checkpoint, txn_idx = self.get_new_checkpoint(checkpoint, curr_block_txns,mining=True)
+    blkid = uuid1()
+    args = {&#34;block&#34;: Block(blkid, self.current_chain_end, curr_block_txns[:txn_idx], self.idx, False,self.simulator.cfg[&#34;num_peers&#34;])}
+    creation_time = round(self.simulator.current_time + np.random.exponential(self.mean_mining_time),2)
+    block_create_event = Event(self.create_block,args)
+    self.next_block_creation_event = block_create_event 
+    self.simulator.add_event(block_create_event, creation_time)</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.receive_block"><code class="name flex">
+<span>def <span class="ident">receive_block</span></span>(<span>self, args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receives a block, validates and adds it to the blockchain if it is a valid block</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>args</code></strong> :&ensp;<code>dict</code> of <code>str to <a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code></dt>
+<dd>Dictionary containing the received block</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def receive_block(self, args):
+    &#34;&#34;&#34;Receives a block, validates and adds it to the blockchain if it is a valid block
+
+    Args:
+        args (dict of str to Block): Dictionary containing the received block
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    block = args[&#34;block&#34;]
+    if block in self.all_received_blocks:
+        return
+    self.all_received_blocks.add(block)
+    self.block_arrival_text+=&#34;{}, {}, {} sec, {}\n&#34;.format(block.blkid,block.chain_length-1,self.simulator.current_time/1000,block.parent.blkid)
+    if block.parent not in self.blocktree:
+        self.pending_blocks.append(block)
+        self.broadcast(block)
+    else:
+        checkpoint = (block.parent).checkpoint.copy()
+        checkpoint = self.get_new_checkpoint(checkpoint, block.txns)
+        if checkpoint:
+            self.broadcast(block)
+            block.store_checkpoint(checkpoint)
+            self.blocktree.append(block)
+            self.blockchain_txns+=len(block.txns)
+            block.parent.seen_its_child(self.idx)
+            if block.parent == self.current_chain_end:
+                if self.next_block_creation_event is not None:
+                    self.next_block_creation_event.execute = False
+                self.pending_txns -= set(block.txns)
+                self.current_chain_end = block
+                temp_chain_end=self.add_pending_blocks(block)
+                if temp_chain_end != self.current_chain_end:
+                    pointer = temp_chain_end
+                    while pointer != self.current_chain_end:
+                        self.pending_txns -= set(pointer.txns)
+                        pointer = pointer.parent
+                self.current_chain_end = temp_chain_end
+                self.mine_block()
+            else:
+                temp_chain_end=self.add_pending_blocks(block)
+                if temp_chain_end.chain_length &gt; self.current_chain_end.chain_length:
+                    if self.next_block_creation_event is not None:
+                        self.next_block_creation_event.execute = False
+                    self.pending_txns -= temp_chain_end.seen_txns
+                    self.current_chain_end = temp_chain_end
+                    self.mine_block()</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.receive_transaction"><code class="name flex">
+<span>def <span class="ident">receive_transaction</span></span>(<span>self, args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receives a transaction from a neighbour peer</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>args</code></strong> :&ensp;<code>dict</code> of <code>str to <a title="p2p_code.Transaction" href="#p2p_code.Transaction">Transaction</a></code></dt>
+<dd>Dictionary containing the Transaction object.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def receive_transaction(self, args):
+    &#34;&#34;&#34;Receives a transaction from a neighbour peer
+
+    Args:
+        args (dict of str to Transaction): Dictionary containing the Transaction object.
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    txn = args[&#34;txn&#34;]
+    self.broadcast(txn)
+    if txn not in self.current_chain_end.seen_txns:
+        self.pending_txns.add(txn)
+        self.pending_txn_max_size = max(self.pending_txn_max_size,len(self.pending_txns))</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.show_blocktree"><code class="name flex">
+<span>def <span class="ident">show_blocktree</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a graphical representation of the blockchain for users to visualize</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show_blocktree(self):  
+    &#34;&#34;&#34;Creates a graphical representation of the blockchain for users to visualize
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    tree = nx.DiGraph()  
+    for block in self.blocktree:
+        tree.add_node(block.blkid,status=&#34;Branch_block&#34;)
+    for block in self.blocktree:
+        if block.blkid!=&#34;GENESIS&#34;:
+            tree.add_edge(block.blkid,block.parent.blkid)
+    cur_block = self.current_chain_end
+    while cur_block.blkid!=&#34;GENESIS&#34;:
+        tree.nodes[cur_block.blkid][&#34;status&#34;] = &#34;Longest_chain_block&#34;
+        cur_block = cur_block.parent
+    tree.nodes[&#34;GENESIS&#34;][&#34;status&#34;] = &#34;GENESIS_block&#34;
+    node_color = []
+    genesis_color, longest_chain_color, branch_color = &#39;yellow&#39;, &#39;red&#39;, &#39;blue&#39;
+    for node in tree.nodes(data=True):
+        if &#39;Branch_block&#39; == node[1][&#39;status&#39;]:
+            node_color.append(branch_color)
+        elif &#39;Longest_chain_block&#39; == node[1][&#39;status&#39;]:
+            node_color.append(longest_chain_color)
+        elif &#39;GENESIS_block&#39; == node[1][&#39;status&#39;]:
+            node_color.append(genesis_color)
+    nx.draw_networkx(tree, with_labels=False, node_size=10, node_color=node_color, width=0.5, arrowsize=5)
+    genesis_patch = mpatches.Patch(color=genesis_color, label=&#39;Genesis block&#39;)
+    longest_patch = mpatches.Patch(color=longest_chain_color, label=&#39;Longest Chain block&#39;)
+    branch_patch = mpatches.Patch(color=branch_color, label=&#39;Branch block&#39;)
+    plt.legend(handles=[genesis_patch, longest_patch, branch_patch], loc=&#34;upper right&#34;)        
+    # plt.savefig(&#39;blockchain_{}_{}.png&#39;.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.show_final_stats"><code class="name flex">
+<span>def <span class="ident">show_final_stats</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calls the plotting functions all together. Also displays some data regarding the average number of
+transactions included in each block in the blockchain, the maximum size of the pending transactions pool
+and the average size of the pending transactions pool when mining a block</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show_final_stats(self):
+    &#34;&#34;&#34;Calls the plotting functions all together. Also displays some data regarding the average number of 
+    transactions included in each block in the blockchain, the maximum size of the pending transactions pool
+    and the average size of the pending transactions pool when mining a block
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    print(&#34;&#34;.join([&#39;*&#39;]*30)+&#34;Peer ID {}&#34;.format(self.idx)+&#34;&#34;.join([&#39;*&#39;]*30))
+    self.show_blocktree()
+    self.show_fraction_of_chain() 
+    self.show_fraction_of_total_blocks()
+    self.get_branch_lengths()
+    print(&#34;Average Number of Transactions per block in entire blockchain for Peer ID {} : {}&#34;.format(self.idx,self.blockchain_txns/len(self.blocktree)))
+    print(&#34;Max Size of pending txn pool for Peer ID {} : {}&#34;.format(self.idx,self.pending_txn_max_size))
+    print(&#34;Average size of transaction pool at time of choosing txns is {}\n&#34;.format(self.pending_txn_option_size/self.number_of_mines))</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.show_fraction_of_chain"><code class="name flex">
+<span>def <span class="ident">show_fraction_of_chain</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Displays a bar graph showing the fraction of blocks created by each peer in this peer's
+version of the blockchain</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show_fraction_of_chain(self):
+    &#34;&#34;&#34;Displays a bar graph showing the fraction of blocks created by each peer in this peer&#39;s
+    version of the blockchain
+
+    Args:
+        None
+    
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    blocks_per_peer = self.get_stats()
+    y = [num/self.current_chain_end.chain_length for num in blocks_per_peer]
+    x = [&#34;peer_{}\nHp:{}\n{}&#34;.format(idx,self.simulator.hashing_fractions[idx],self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg[&#34;num_peers&#34;])]
+    fig = plt.figure(figsize = (10, 5))
+    plt.bar(x, y, color =&#39;blue&#39;,width = 0.4)
+    for index, value in enumerate(y):
+        value = round(value,3)
+        plt.text(index , 1.02*value,&#39;%f&#39; % value, ha=&#39;center&#39;, va=&#39;bottom&#39;)
+    plt.xticks(x)
+    plt.xlabel(&#34;Peer ID&#34;)
+    plt.ylabel(&#34;Fraction of Longest chain&#34;)
+    plt.title(&#34;Fraction of longest chain produced per peer&#34;)
+    # plt.savefig(&#39;chain_fraction_{}_{}.png&#39;.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.show_fraction_of_total_blocks"><code class="name flex">
+<span>def <span class="ident">show_fraction_of_total_blocks</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Displays a bar graph showing the fraction of blocks created by each peer that got into
+this peer's version of the blockchain</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show_fraction_of_total_blocks(self):
+    &#34;&#34;&#34;Displays a bar graph showing the fraction of blocks created by each peer that got into 
+    this peer&#39;s version of the blockchain
+
+    Args:
+        None
+    
+    Returns:
+        None
+        
+    &#34;&#34;&#34;
+    blocks_per_peer = self.get_stats()
+    y=[]
+    for i, num in enumerate(blocks_per_peer):
+        blocks_produced = self.simulator.peer_list[i].total_blocks
+        if blocks_produced!=0:
+            y.append(num/blocks_produced)
+        else:
+            y.append(0)
+    x = [&#34;peer_{}\nHp:{}\n{}&#34;.format(idx,self.simulator.hashing_fractions[idx],self.simulator.peer_list[idx].peer_type) for idx in range(self.simulator.cfg[&#34;num_peers&#34;])]
+    fig = plt.figure(figsize = (10, 5))
+    plt.bar(x, y, color =&#39;blue&#39;,width = 0.4)
+    for index, value in enumerate(y):
+        value = round(value,3)
+        plt.text(index , 1.02*value,&#39;%f&#39; % value, ha=&#39;center&#39;, va=&#39;bottom&#39;)
+    plt.xticks(x)
+    plt.xlabel(&#34;Peer ID&#34;)
+    plt.ylabel(&#34;Fraction of total blocks&#34;)
+    plt.title(&#34;Fraction of Total blocks that went into Longest chain per peer&#34;)
+    # plt.savefig(&#39;success_fraction_{}_{}.png&#39;.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.start_mining"><code class="name flex">
+<span>def <span class="ident">start_mining</span></span>(<span>self, args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Starts the mining process. Used by simulator's event_queue to initialise the event_queue</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>args</code></strong> :&ensp;<code>None</code></dt>
+<dd>Added for uniformity</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def start_mining(self,args):
+    &#34;&#34;&#34;Starts the mining process. Used by simulator&#39;s event_queue to initialise the event_queue
+
+    Args:
+        args (None): Added for uniformity
+
+    Returns:
+        None
+        
+    &#34;&#34;&#34;
+    self.mine_block()</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.update_checkpoint"><code class="name flex">
+<span>def <span class="ident">update_checkpoint</span></span>(<span>self, txn, checkpoint)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a transaction and a dictionary of balances for each pair it updates the balances
+of the peers involved in the transaction</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>txn</code></strong> :&ensp;<code><a title="p2p_code.Transaction" href="#p2p_code.Transaction">Transaction</a></code></dt>
+<dd>The transaction which states the sender, receiver peers and the amount of
+bitcoins involved</dd>
+<dt><strong><code>checkpoint</code></strong> :&ensp;<code>dict</code> of <code>int to int</code></dt>
+<dd>Dictionary storing balances in the form of {peer_id : balance} format</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Updated checkpoint with changed balances or None if any balance becomes negative due to the transaction</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update_checkpoint(self, txn, checkpoint): 
+    &#34;&#34;&#34;Given a transaction and a dictionary of balances for each pair it updates the balances 
+    of the peers involved in the transaction
+
+    Args:
+        txn (Transaction): The transaction which states the sender, receiver peers and the amount of 
+            bitcoins involved
+        checkpoint (dict of int to int): Dictionary storing balances in the form of {peer_id : balance} format
+    
+    Returns:
+        Updated checkpoint with changed balances or None if any balance becomes negative due to the transaction
+
+    &#34;&#34;&#34;
+    if txn.sender is not None:
+        if txn.sender in checkpoint:
+            checkpoint[txn.sender] -= txn.coins
+            if txn.receiver in checkpoint:
+                checkpoint[txn.receiver] += txn.coins
+            else:
+                checkpoint[txn.receiver] = txn.coins
+            if checkpoint[txn.sender] &lt; 0:
+                return None 
+        else:
+            return None 
+    else:
+        ## Coinbase txn
+        if txn.receiver in checkpoint:
+            checkpoint[txn.receiver] += txn.coins
+        else:
+            checkpoint[txn.receiver] = txn.coins
+        
+    return checkpoint</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Peer.write_block_arrival_time"><code class="name flex">
+<span>def <span class="ident">write_block_arrival_time</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Writes the block arrival data to a text file</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_block_arrival_time(self):
+    &#34;&#34;&#34;Writes the block arrival data to a text file
+
+    Args:
+        None
+    
+    Returns:
+        None
+        
+    &#34;&#34;&#34;
+    folder = self.simulator.cfg[&#34;text_files_folder&#34;]
+    target = os.path.join(folder,os.path.basename(self.simulator.cfg_filename))
+    if not os.path.isdir(target):
+        os.mkdir(target)
+    with open(os.path.join(target,&#34;peer_{}.txt&#34;.format(self.idx)),&#39;w&#39;) as fp:
+        fp.write(&#34;blockHash, blockNum, TimeOfArrival, parentBlockHash\n&#34;+self.block_arrival_text)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="p2p_code.PriorityEntry"><code class="flex name class">
+<span>class <span class="ident">PriorityEntry</span></span>
+<span>(</span><span>priority, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The event queue used is a min priority queue and this is the class used
+to record events in it. Priority is given to the time of execution of event</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>priority</code></strong> :&ensp;<code>float</code></dt>
+<dd>Time of execution of event</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code><a title="p2p_code.Event" href="#p2p_code.Event">Event</a></code></dt>
+<dd>Event object representing the event to be executed</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>priority</code></strong> :&ensp;<code>float</code></dt>
+<dd>Denotes time of execution. Events with lower time of execution will be executed earlier.</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code><a title="p2p_code.Event" href="#p2p_code.Event">Event</a></code></dt>
+<dd>Event class object. Contains the event to be exccuted in the form of a function.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PriorityEntry(object):
+    &#34;&#34;&#34;The event queue used is a min priority queue and this is the class used 
+    to record events in it. Priority is given to the time of execution of event
+
+    Args:
+        priority (float): Time of execution of event
+        data (Event): Event object representing the event to be executed
+
+    Attributes:
+        priority (float): Denotes time of execution. Events with lower time of execution will be executed earlier.
+        data (Event): Event class object. Contains the event to be exccuted in the form of a function.
+        
+    &#34;&#34;&#34;
+
+    def __init__(self, priority, data):
+        self.data = data
+        self.priority = priority
+
+    def __lt__(self, other):
+        &#34;&#34;&#34;Comparision method 
+
+        Args:
+            other (PriorityEntry): A different PriorityEntry object to compare with
+        
+        Returns:
+            True if self has lesser priority than other
+
+        &#34;&#34;&#34;
+        return self.priority &lt; other.priority</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Simulator"><code class="flex name class">
+<span>class <span class="ident">Simulator</span></span>
+<span>(</span><span>cfg_file)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Simulator will create all peers and initialize them. It will also execute events at the next time step
+by iterating over the
+event queue in increasing order of time</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>cfg_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>.yaml file containing all parameters for the simulation </dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>cfg_filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>.yaml file containing all simulation configuration parameters</dd>
+<dt><strong><code>cfg</code></strong> :&ensp;<code>dict</code> of <code>str to float</code> or <code>int</code> or <code>str</code></dt>
+<dd>Contains all parameters from cfg_filename in dictionary format {param_name : value}</dd>
+<dt><strong><code>event_queue</code></strong> :&ensp;<code>PriorityQueue</code></dt>
+<dd>A min PriorityQueue which stores PriorityEntry objects</dd>
+<dt><strong><code>current_time</code></strong> :&ensp;<code>float</code></dt>
+<dd>The time correspnding to the current event being executed</dd>
+<dt><strong><code>rho</code></strong> :&ensp;<code>float</code></dt>
+<dd>Numpy array containing delay times corresponding to speed of light propagation for every pair of peers</dd>
+<dt><strong><code>hashing_fractions</code></strong> :&ensp;<code>list</code> of <code>float</code></dt>
+<dd>Represents the hashing power fraction for each peer. Should sum up to 1</dd>
+<dt><strong><code>genesis_block</code></strong> :&ensp;<code><a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code></dt>
+<dd>The genesis block that is supplied to every peer at the start of the simulation</dd>
+<dt><strong><code>peer_graph</code></strong> :&ensp;<code>list</code> of <code>list</code> of <code>int</code></dt>
+<dd>P2P network between peers stored in the format of adjacency lists using peer IDs</dd>
+<dt><strong><code>peer_list</code></strong> :&ensp;<code>list</code> of <code><a title="p2p_code.Peer" href="#p2p_code.Peer">Peer</a></code></dt>
+<dd>List of Peer objects representing peers in P2P network</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Simulator:
+    &#34;&#34;&#34;Simulator will create all peers and initialize them. It will also execute events at the next time step 
+    by iterating over the  event queue in increasing order of time
+
+    Args:
+        cfg_file (str): .yaml file containing all parameters for the simulation 
+
+    Attributes:
+        cfg_filename (str): .yaml file containing all simulation configuration parameters
+        cfg (dict of str to float or int or str): Contains all parameters from cfg_filename in dictionary format {param_name : value}
+        event_queue (PriorityQueue): A min PriorityQueue which stores PriorityEntry objects
+        current_time (float): The time correspnding to the current event being executed
+        rho (float): Numpy array containing delay times corresponding to speed of light propagation for every pair of peers
+        hashing_fractions (list of float): Represents the hashing power fraction for each peer. Should sum up to 1
+        genesis_block (Block): The genesis block that is supplied to every peer at the start of the simulation
+        peer_graph (list of list of int): P2P network between peers stored in the format of adjacency lists using peer IDs
+        peer_list (list of Peer): List of Peer objects representing peers in P2P network
+        
+    &#34;&#34;&#34;
+
+    def __init__(self, cfg_file):
+        self.cfg_filename = cfg_file
+        with open(cfg_file,&#39;r&#39;) as fp:
+            self.cfg = yaml.safe_load(fp) 
+        self.event_queue = PriorityQueue(0)
+        self.current_time = 0
+        self.rho = np.random.uniform(self.cfg[&#34;low_rho&#34;],self.cfg[&#34;high_rho&#34;],size=(self.cfg[&#34;num_peers&#34;],self.cfg[&#34;num_peers&#34;]))
+
+    def calc_latency(self,type_s, type_r, data_size, rho_val):
+        &#34;&#34;&#34;Calculates latency between two peers in network
+
+        Args:
+            type_s (str): Takes values &#39;slow&#39; or &#39;fast&#39;. Network speed type of sender peer
+            type_s (str): Takes values &#39;slow&#39; or &#39;fast&#39;. Network speed type of receiver peer
+            data_size (int): Memory size of message to be sent
+            rho_val (float): Delay due to speed of light propagation between sender and receiver peer
+
+        Returns:
+            Float value representing time taken send message from sender to receiver
+
+        &#34;&#34;&#34;
+        if type_s == &#34;slow&#34; or type_r == &#34;slow&#34;:
+            c = self.cfg[&#34;slow_cij_val&#34;]
+        else:
+            c = self.cfg[&#34;high_cij_val&#34;]
+        d = np.random.exponential(self.cfg[&#34;dij_cij_factor&#34;]/c)*1000
+        return rho_val + d + (data_size/c)*1000
+        
+
+    def get_graph(self):
+        &#34;&#34;&#34;Creates a random connected P2P graph between peers at the start of simulation. Graph created
+        is sampled uniformly from the set of all connected undirected graphs
+        
+        Args:
+            None
+
+        Returns:
+            A list of list of int representing the graph in adjacency list format
+
+        &#34;&#34;&#34;
+        n = self.cfg[&#34;num_peers&#34;]
+        perm = list(np.random.permutation(n))
+        in_net = [perm[0]]
+        graph = [[] for i in range(n)]
+        for peer_id in perm[1:]:
+            num_connections = np.random.randint(1,len(in_net)+1)
+            connections = list(np.random.choice(in_net, size = num_connections, replace = False))
+            graph[peer_id] = connections
+            for conn in connections:
+                graph[conn].append(peer_id)
+            in_net.append(peer_id)
+        return graph
+
+    def BA_model_graph(self):
+        &#34;&#34;&#34;Creates a random connected P2P graph between peers at the start of simulation based on the 
+        Babasi-Albert model of Scale-free network
+        
+        Args:
+            None
+
+        Returns:
+            A list of list of int representing the graph in adjacency list format
+
+        &#34;&#34;&#34;
+        np.random.seed(1)
+        n = self.cfg[&#34;num_peers&#34;]
+        m = self.cfg[&#34;babasi_albert_m&#34;]
+        assert m &lt; n, &#34;Babasi-Albert parameter &#39;m&#39; needs to be strictly smaller than n. Instead got {}&#34;.format(m)
+        perm = list(np.random.permutation(n))
+        graph = [[] for i in range(n)]
+        for peer_id in perm[:m]:
+            graph[peer_id].append(perm[m])
+        graph[perm[m]] = perm[:m]
+        degrees = np.zeros(n,)
+        degrees[perm[:m]]+=1
+        degrees[perm[m]]=m 
+        total_deg = 2*m
+        for idx in range(m+1,n):
+            attachments=np.random.choice(perm[:idx],size=m,replace=False,p=degrees[perm[:idx]]/total_deg)
+            for peer_id in attachments:
+                graph[peer_id].append(perm[idx])
+            graph[perm[idx]] = list(attachments)
+            degrees[attachments]+=1
+            degrees[perm[idx]]=m
+            total_deg+=2*m
+        return graph
+
+    def create_peers(self):
+        &#34;&#34;&#34;Creates, connects and initialises the peers 
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        n = self.cfg[&#34;num_peers&#34;]
+        self.genesis_block = Block(None,None,None,None,True,self.cfg[&#34;num_peers&#34;])
+        self.hashing_fractions = self.cfg[&#34;hashing_fractions&#34;]
+        assert np.sum(self.hashing_fractions)==1, &#34;Hashing fractions for {} peers should sum to 1&#34;.format(n)
+        mining_times = [self.cfg[&#34;net_mean_mining_time&#34;]/hf for hf in self.hashing_fractions]
+        slow_peers = round(n*self.cfg[&#34;slow_fraction&#34;])
+        temp = list(np.random.permutation(n))
+        peer_types=[(idx, &#34;slow&#34;) for idx in temp[:slow_peers]]+[(idx, &#34;fast&#34;) for idx in temp[slow_peers:]]
+        peer_types.sort()
+        graph = self.BA_model_graph()
+        self.peer_graph = graph
+        self.peer_list=[]
+        for idx, peer_type in peer_types:
+            self.peer_list.append(Peer(idx, self.cfg[&#34;txn_inter_arrival_time&#34;], mining_times[idx],peer_type,self.cfg[&#34;mining_fee&#34;],self,self.genesis_block))
+        for peer in self.peer_list:
+            idx = peer.idx
+            conns = list(np.array(self.peer_list)[graph[idx]])
+            peer.initialise_neighbours(conns)
+
+    def add_event(self,event,time):
+        &#34;&#34;&#34;Adds a PriorityEntry to event_queue
+
+        Args:
+            event (Event): Event class object containing the event to be executed
+            time (float): Time at which to execute event
+        
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        self.event_queue.put(PriorityEntry(time,event))
+
+    def initialise_event_queue(self):
+        &#34;&#34;&#34;Initialises event_queue so as start the mining and transactions creation process at each peer
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        initial_events = []
+        for peer in self.peer_list:
+            mining_event = Event(peer.start_mining, None)
+            txn_event = Event(peer.create_transaction, None)
+            self.add_event(mining_event,self.current_time)
+            self.add_event(txn_event,self.current_time)
+        
+    def run_world(self):
+        &#34;&#34;&#34;Starts executing events in event_queue starting at time 0
+
+        Args:
+            None
+        
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        completed_events=0
+        while (not self.event_queue.empty()) and self.current_time &lt; self.cfg[&#34;max_time&#34;]:
+            entry = self.event_queue.get()
+            self.current_time = entry.priority
+            entry.data.execute_event()
+            completed_events+=1
+            print(completed_events)
+        print(&#34;Simulation is over with total {} events executed at simulation time {} sec&#34;.format(completed_events,self.current_time/1000))
+
+
+    def start_world(self):
+        &#34;&#34;&#34;Starts the simulation by creating peers, initialising event_queue and commencing execution of events
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        self.create_peers()
+        self.initialise_event_queue()
+        self.run_world()
+        
+    def show_txns(self):
+        &#34;&#34;&#34;Displays total transactions created by each peer at the end of simulation
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        print(&#34;Transactions :&#34;)
+        for peer in self.peer_list:
+            print(&#34;Peer ID {} : {}&#34;.format(peer.idx,peer.total_txns))
+
+    def show_blocks(self):
+        &#34;&#34;&#34;Displays total blocks created by each peer at the end of simulation
+
+        Args:
+            None
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        print(&#34;Blocks :&#34;)
+        for peer in self.peer_list:
+            print(&#34;Peer ID {} : {}&#34;.format(peer.idx,peer.total_blocks))
+    
+    def show_peer_graph(self):
+        &#34;&#34;&#34;Displays the connected P2P graph network
+
+        Args:
+            None
+
+        Returns:
+            None
+            
+        &#34;&#34;&#34;
+        graph = nx.DiGraph()
+        for i in range(self.cfg[&#34;num_peers&#34;]):
+            graph.add_node(i,status=&#34;peer&#34;)
+        for i in range(self.cfg[&#34;num_peers&#34;]):
+            for x in self.peer_graph[i]:
+                graph.add_edge(i,x)
+        nx.draw_networkx(graph, with_labels=True, node_size=10, width=0.5, arrowsize=5)
+        # plt.savefig(&#34;p2p_graph_{}.png&#34;.format(os.path.basename(self.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+        plt.show()</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="p2p_code.Simulator.BA_model_graph"><code class="name flex">
+<span>def <span class="ident">BA_model_graph</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a random connected P2P graph between peers at the start of simulation based on the
+Babasi-Albert model of Scale-free network</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>A list of list of int representing the graph in adjacency list format</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def BA_model_graph(self):
+    &#34;&#34;&#34;Creates a random connected P2P graph between peers at the start of simulation based on the 
+    Babasi-Albert model of Scale-free network
+    
+    Args:
+        None
+
+    Returns:
+        A list of list of int representing the graph in adjacency list format
+
+    &#34;&#34;&#34;
+    np.random.seed(1)
+    n = self.cfg[&#34;num_peers&#34;]
+    m = self.cfg[&#34;babasi_albert_m&#34;]
+    assert m &lt; n, &#34;Babasi-Albert parameter &#39;m&#39; needs to be strictly smaller than n. Instead got {}&#34;.format(m)
+    perm = list(np.random.permutation(n))
+    graph = [[] for i in range(n)]
+    for peer_id in perm[:m]:
+        graph[peer_id].append(perm[m])
+    graph[perm[m]] = perm[:m]
+    degrees = np.zeros(n,)
+    degrees[perm[:m]]+=1
+    degrees[perm[m]]=m 
+    total_deg = 2*m
+    for idx in range(m+1,n):
+        attachments=np.random.choice(perm[:idx],size=m,replace=False,p=degrees[perm[:idx]]/total_deg)
+        for peer_id in attachments:
+            graph[peer_id].append(perm[idx])
+        graph[perm[idx]] = list(attachments)
+        degrees[attachments]+=1
+        degrees[perm[idx]]=m
+        total_deg+=2*m
+    return graph</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Simulator.add_event"><code class="name flex">
+<span>def <span class="ident">add_event</span></span>(<span>self, event, time)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds a PriorityEntry to event_queue</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>event</code></strong> :&ensp;<code><a title="p2p_code.Event" href="#p2p_code.Event">Event</a></code></dt>
+<dd>Event class object containing the event to be executed</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>float</code></dt>
+<dd>Time at which to execute event</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_event(self,event,time):
+    &#34;&#34;&#34;Adds a PriorityEntry to event_queue
+
+    Args:
+        event (Event): Event class object containing the event to be executed
+        time (float): Time at which to execute event
+    
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    self.event_queue.put(PriorityEntry(time,event))</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Simulator.calc_latency"><code class="name flex">
+<span>def <span class="ident">calc_latency</span></span>(<span>self, type_s, type_r, data_size, rho_val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculates latency between two peers in network</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>type_s</code></strong> :&ensp;<code>str</code></dt>
+<dd>Takes values 'slow' or 'fast'. Network speed type of sender peer</dd>
+<dt><strong><code>type_s</code></strong> :&ensp;<code>str</code></dt>
+<dd>Takes values 'slow' or 'fast'. Network speed type of receiver peer</dd>
+<dt><strong><code>data_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>Memory size of message to be sent</dd>
+<dt><strong><code>rho_val</code></strong> :&ensp;<code>float</code></dt>
+<dd>Delay due to speed of light propagation between sender and receiver peer</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Float value representing time taken send message from sender to receiver</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def calc_latency(self,type_s, type_r, data_size, rho_val):
+    &#34;&#34;&#34;Calculates latency between two peers in network
+
+    Args:
+        type_s (str): Takes values &#39;slow&#39; or &#39;fast&#39;. Network speed type of sender peer
+        type_s (str): Takes values &#39;slow&#39; or &#39;fast&#39;. Network speed type of receiver peer
+        data_size (int): Memory size of message to be sent
+        rho_val (float): Delay due to speed of light propagation between sender and receiver peer
+
+    Returns:
+        Float value representing time taken send message from sender to receiver
+
+    &#34;&#34;&#34;
+    if type_s == &#34;slow&#34; or type_r == &#34;slow&#34;:
+        c = self.cfg[&#34;slow_cij_val&#34;]
+    else:
+        c = self.cfg[&#34;high_cij_val&#34;]
+    d = np.random.exponential(self.cfg[&#34;dij_cij_factor&#34;]/c)*1000
+    return rho_val + d + (data_size/c)*1000</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Simulator.create_peers"><code class="name flex">
+<span>def <span class="ident">create_peers</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates, connects and initialises the peers </p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_peers(self):
+    &#34;&#34;&#34;Creates, connects and initialises the peers 
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    n = self.cfg[&#34;num_peers&#34;]
+    self.genesis_block = Block(None,None,None,None,True,self.cfg[&#34;num_peers&#34;])
+    self.hashing_fractions = self.cfg[&#34;hashing_fractions&#34;]
+    assert np.sum(self.hashing_fractions)==1, &#34;Hashing fractions for {} peers should sum to 1&#34;.format(n)
+    mining_times = [self.cfg[&#34;net_mean_mining_time&#34;]/hf for hf in self.hashing_fractions]
+    slow_peers = round(n*self.cfg[&#34;slow_fraction&#34;])
+    temp = list(np.random.permutation(n))
+    peer_types=[(idx, &#34;slow&#34;) for idx in temp[:slow_peers]]+[(idx, &#34;fast&#34;) for idx in temp[slow_peers:]]
+    peer_types.sort()
+    graph = self.BA_model_graph()
+    self.peer_graph = graph
+    self.peer_list=[]
+    for idx, peer_type in peer_types:
+        self.peer_list.append(Peer(idx, self.cfg[&#34;txn_inter_arrival_time&#34;], mining_times[idx],peer_type,self.cfg[&#34;mining_fee&#34;],self,self.genesis_block))
+    for peer in self.peer_list:
+        idx = peer.idx
+        conns = list(np.array(self.peer_list)[graph[idx]])
+        peer.initialise_neighbours(conns)</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Simulator.get_graph"><code class="name flex">
+<span>def <span class="ident">get_graph</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a random connected P2P graph between peers at the start of simulation. Graph created
+is sampled uniformly from the set of all connected undirected graphs</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>A list of list of int representing the graph in adjacency list format</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_graph(self):
+    &#34;&#34;&#34;Creates a random connected P2P graph between peers at the start of simulation. Graph created
+    is sampled uniformly from the set of all connected undirected graphs
+    
+    Args:
+        None
+
+    Returns:
+        A list of list of int representing the graph in adjacency list format
+
+    &#34;&#34;&#34;
+    n = self.cfg[&#34;num_peers&#34;]
+    perm = list(np.random.permutation(n))
+    in_net = [perm[0]]
+    graph = [[] for i in range(n)]
+    for peer_id in perm[1:]:
+        num_connections = np.random.randint(1,len(in_net)+1)
+        connections = list(np.random.choice(in_net, size = num_connections, replace = False))
+        graph[peer_id] = connections
+        for conn in connections:
+            graph[conn].append(peer_id)
+        in_net.append(peer_id)
+    return graph</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Simulator.initialise_event_queue"><code class="name flex">
+<span>def <span class="ident">initialise_event_queue</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initialises event_queue so as start the mining and transactions creation process at each peer</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initialise_event_queue(self):
+    &#34;&#34;&#34;Initialises event_queue so as start the mining and transactions creation process at each peer
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    initial_events = []
+    for peer in self.peer_list:
+        mining_event = Event(peer.start_mining, None)
+        txn_event = Event(peer.create_transaction, None)
+        self.add_event(mining_event,self.current_time)
+        self.add_event(txn_event,self.current_time)</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Simulator.run_world"><code class="name flex">
+<span>def <span class="ident">run_world</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Starts executing events in event_queue starting at time 0</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run_world(self):
+    &#34;&#34;&#34;Starts executing events in event_queue starting at time 0
+
+    Args:
+        None
+    
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    completed_events=0
+    while (not self.event_queue.empty()) and self.current_time &lt; self.cfg[&#34;max_time&#34;]:
+        entry = self.event_queue.get()
+        self.current_time = entry.priority
+        entry.data.execute_event()
+        completed_events+=1
+        print(completed_events)
+    print(&#34;Simulation is over with total {} events executed at simulation time {} sec&#34;.format(completed_events,self.current_time/1000))</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Simulator.show_blocks"><code class="name flex">
+<span>def <span class="ident">show_blocks</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Displays total blocks created by each peer at the end of simulation</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show_blocks(self):
+    &#34;&#34;&#34;Displays total blocks created by each peer at the end of simulation
+
+    Args:
+        None
+
+    Returns:
+        None
+        
+    &#34;&#34;&#34;
+    print(&#34;Blocks :&#34;)
+    for peer in self.peer_list:
+        print(&#34;Peer ID {} : {}&#34;.format(peer.idx,peer.total_blocks))</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Simulator.show_peer_graph"><code class="name flex">
+<span>def <span class="ident">show_peer_graph</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Displays the connected P2P graph network</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show_peer_graph(self):
+    &#34;&#34;&#34;Displays the connected P2P graph network
+
+    Args:
+        None
+
+    Returns:
+        None
+        
+    &#34;&#34;&#34;
+    graph = nx.DiGraph()
+    for i in range(self.cfg[&#34;num_peers&#34;]):
+        graph.add_node(i,status=&#34;peer&#34;)
+    for i in range(self.cfg[&#34;num_peers&#34;]):
+        for x in self.peer_graph[i]:
+            graph.add_edge(i,x)
+    nx.draw_networkx(graph, with_labels=True, node_size=10, width=0.5, arrowsize=5)
+    # plt.savefig(&#34;p2p_graph_{}.png&#34;.format(os.path.basename(self.cfg_filename)), dpi=300, bbox_inches=&#39;tight&#39;)
+    plt.show()</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Simulator.show_txns"><code class="name flex">
+<span>def <span class="ident">show_txns</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Displays total transactions created by each peer at the end of simulation</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show_txns(self):
+    &#34;&#34;&#34;Displays total transactions created by each peer at the end of simulation
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    print(&#34;Transactions :&#34;)
+    for peer in self.peer_list:
+        print(&#34;Peer ID {} : {}&#34;.format(peer.idx,peer.total_txns))</code></pre>
+</details>
+</dd>
+<dt id="p2p_code.Simulator.start_world"><code class="name flex">
+<span>def <span class="ident">start_world</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Starts the simulation by creating peers, initialising event_queue and commencing execution of events</p>
+<h2 id="args">Args</h2>
+<p>None</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def start_world(self):
+    &#34;&#34;&#34;Starts the simulation by creating peers, initialising event_queue and commencing execution of events
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    self.create_peers()
+    self.initialise_event_queue()
+    self.run_world()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="p2p_code.Transaction"><code class="flex name class">
+<span>class <span class="ident">Transaction</span></span>
+<span>(</span><span>txn_id, sender, receiver, coins)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Transaction class instances represent a transaction in the simulation</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>txn_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>Transaction ID for this transaction</dd>
+<dt><strong><code>sender</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of peer who will pay bitcoins</dd>
+<dt><strong><code>receiver</code></strong> :&ensp;<code>int</code></dt>
+<dd>ID of peer who will receive bitcoins</dd>
+<dt><strong><code>coins</code></strong> :&ensp;<code>float</code></dt>
+<dd>Bitcoins involved in the transfer</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>txn_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The unique ID of the transaction</dd>
+<dt><strong><code>sender</code></strong> :&ensp;<code>int</code></dt>
+<dd>The ID of the peer who will pay the bitcoin</dd>
+<dt><strong><code>receiver</code></strong> :&ensp;<code>int</code></dt>
+<dd>The ID of the peer who will receive the bitcoin</dd>
+<dt><strong><code>coins</code></strong> :&ensp;<code>float</code></dt>
+<dd>Bitcoins involved in the transfer of money</dd>
+<dt><strong><code>size</code></strong> :&ensp;<code>int</code></dt>
+<dd>Memory size of the transaction in Kb</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Transaction:
+    &#34;&#34;&#34;Transaction class instances represent a transaction in the simulation
+
+    Args:
+        txn_id (str): Transaction ID for this transaction
+        sender (int): ID of peer who will pay bitcoins
+        receiver (int): ID of peer who will receive bitcoins
+        coins (float): Bitcoins involved in the transfer
+
+    Attributes:
+        txn_id (str): The unique ID of the transaction
+        sender (int): The ID of the peer who will pay the bitcoin
+        receiver (int): The ID of the peer who will receive the bitcoin
+        coins (float): Bitcoins involved in the transfer of money
+        size (int): Memory size of the transaction in Kb
+        
+    &#34;&#34;&#34;
+
+    def __init__(self, txn_id, sender, receiver, coins):
+        self.txn_id = txn_id ## Must be unique
+        self.sender = sender ## When None it means its the mining fee (coin base transaction)
+        self.receiver = receiver ## Receiver can&#39;t be none (invalid transaction)
+        assert coins &gt;= 0, &#34;Negative Transactions disallowed&#34;
+        self.coins = coins
+        self.size = 1 ## in Kb</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="p2p_code.Block" href="#p2p_code.Block">Block</a></code></h4>
+<ul class="">
+<li><code><a title="p2p_code.Block.seen_its_child" href="#p2p_code.Block.seen_its_child">seen_its_child</a></code></li>
+<li><code><a title="p2p_code.Block.store_checkpoint" href="#p2p_code.Block.store_checkpoint">store_checkpoint</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="p2p_code.Event" href="#p2p_code.Event">Event</a></code></h4>
+<ul class="">
+<li><code><a title="p2p_code.Event.execute_event" href="#p2p_code.Event.execute_event">execute_event</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="p2p_code.Peer" href="#p2p_code.Peer">Peer</a></code></h4>
+<ul class="">
+<li><code><a title="p2p_code.Peer.add_pending_blocks" href="#p2p_code.Peer.add_pending_blocks">add_pending_blocks</a></code></li>
+<li><code><a title="p2p_code.Peer.broadcast" href="#p2p_code.Peer.broadcast">broadcast</a></code></li>
+<li><code><a title="p2p_code.Peer.create_block" href="#p2p_code.Peer.create_block">create_block</a></code></li>
+<li><code><a title="p2p_code.Peer.create_transaction" href="#p2p_code.Peer.create_transaction">create_transaction</a></code></li>
+<li><code><a title="p2p_code.Peer.get_branch_lengths" href="#p2p_code.Peer.get_branch_lengths">get_branch_lengths</a></code></li>
+<li><code><a title="p2p_code.Peer.get_new_checkpoint" href="#p2p_code.Peer.get_new_checkpoint">get_new_checkpoint</a></code></li>
+<li><code><a title="p2p_code.Peer.get_stats" href="#p2p_code.Peer.get_stats">get_stats</a></code></li>
+<li><code><a title="p2p_code.Peer.initialise_neighbours" href="#p2p_code.Peer.initialise_neighbours">initialise_neighbours</a></code></li>
+<li><code><a title="p2p_code.Peer.mine_block" href="#p2p_code.Peer.mine_block">mine_block</a></code></li>
+<li><code><a title="p2p_code.Peer.receive_block" href="#p2p_code.Peer.receive_block">receive_block</a></code></li>
+<li><code><a title="p2p_code.Peer.receive_transaction" href="#p2p_code.Peer.receive_transaction">receive_transaction</a></code></li>
+<li><code><a title="p2p_code.Peer.show_blocktree" href="#p2p_code.Peer.show_blocktree">show_blocktree</a></code></li>
+<li><code><a title="p2p_code.Peer.show_final_stats" href="#p2p_code.Peer.show_final_stats">show_final_stats</a></code></li>
+<li><code><a title="p2p_code.Peer.show_fraction_of_chain" href="#p2p_code.Peer.show_fraction_of_chain">show_fraction_of_chain</a></code></li>
+<li><code><a title="p2p_code.Peer.show_fraction_of_total_blocks" href="#p2p_code.Peer.show_fraction_of_total_blocks">show_fraction_of_total_blocks</a></code></li>
+<li><code><a title="p2p_code.Peer.start_mining" href="#p2p_code.Peer.start_mining">start_mining</a></code></li>
+<li><code><a title="p2p_code.Peer.update_checkpoint" href="#p2p_code.Peer.update_checkpoint">update_checkpoint</a></code></li>
+<li><code><a title="p2p_code.Peer.write_block_arrival_time" href="#p2p_code.Peer.write_block_arrival_time">write_block_arrival_time</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="p2p_code.PriorityEntry" href="#p2p_code.PriorityEntry">PriorityEntry</a></code></h4>
+</li>
+<li>
+<h4><code><a title="p2p_code.Simulator" href="#p2p_code.Simulator">Simulator</a></code></h4>
+<ul class="">
+<li><code><a title="p2p_code.Simulator.BA_model_graph" href="#p2p_code.Simulator.BA_model_graph">BA_model_graph</a></code></li>
+<li><code><a title="p2p_code.Simulator.add_event" href="#p2p_code.Simulator.add_event">add_event</a></code></li>
+<li><code><a title="p2p_code.Simulator.calc_latency" href="#p2p_code.Simulator.calc_latency">calc_latency</a></code></li>
+<li><code><a title="p2p_code.Simulator.create_peers" href="#p2p_code.Simulator.create_peers">create_peers</a></code></li>
+<li><code><a title="p2p_code.Simulator.get_graph" href="#p2p_code.Simulator.get_graph">get_graph</a></code></li>
+<li><code><a title="p2p_code.Simulator.initialise_event_queue" href="#p2p_code.Simulator.initialise_event_queue">initialise_event_queue</a></code></li>
+<li><code><a title="p2p_code.Simulator.run_world" href="#p2p_code.Simulator.run_world">run_world</a></code></li>
+<li><code><a title="p2p_code.Simulator.show_blocks" href="#p2p_code.Simulator.show_blocks">show_blocks</a></code></li>
+<li><code><a title="p2p_code.Simulator.show_peer_graph" href="#p2p_code.Simulator.show_peer_graph">show_peer_graph</a></code></li>
+<li><code><a title="p2p_code.Simulator.show_txns" href="#p2p_code.Simulator.show_txns">show_txns</a></code></li>
+<li><code><a title="p2p_code.Simulator.start_world" href="#p2p_code.Simulator.start_world">start_world</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="p2p_code.Transaction" href="#p2p_code.Transaction">Transaction</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
