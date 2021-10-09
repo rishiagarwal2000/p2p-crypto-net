@@ -311,7 +311,7 @@ class Simulator:
             for x in self.peer_graph[i]:
                 graph.add_edge(i,x)
         nx.draw_networkx(graph, with_labels=True, node_size=10, width=0.5, arrowsize=5)
-        # plt.savefig("p2p_graph_{}.png".format(os.path.basename(self.cfg_filename)), dpi=300, bbox_inches='tight')
+        plt.savefig("p2p_graph_{}.png".format(os.path.basename(self.cfg_filename)), dpi=300, bbox_inches='tight')
         plt.show()
         
 class Peer:
@@ -750,7 +750,7 @@ class Peer:
         longest_patch = mpatches.Patch(color=longest_chain_color, label='Longest Chain block')
         branch_patch = mpatches.Patch(color=branch_color, label='Branch block')
         plt.legend(handles=[genesis_patch, longest_patch, branch_patch], loc="upper right")        
-        # plt.savefig('blockchain_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
+        plt.savefig('blockchain_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
         plt.show()
 
     def show_fraction_of_chain(self):
@@ -776,7 +776,7 @@ class Peer:
         plt.xlabel("Peer ID")
         plt.ylabel("Fraction of Longest chain")
         plt.title("Fraction of longest chain produced per peer")
-        # plt.savefig('chain_fraction_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
+        plt.savefig('chain_fraction_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
         plt.show()
 
     def show_fraction_of_total_blocks(self):
@@ -808,7 +808,7 @@ class Peer:
         plt.xlabel("Peer ID")
         plt.ylabel("Fraction of total blocks")
         plt.title("Fraction of Total blocks that went into Longest chain per peer")
-        # plt.savefig('success_fraction_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
+        plt.savefig('success_fraction_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
         plt.show()
     
     def write_block_arrival_time(self):
@@ -860,7 +860,7 @@ class Peer:
         plt.xlabel("Branches (SB : Side Branch ; MB : Main Branch)")
         plt.ylabel("Length in number of blocks")
         plt.title("Length of Blockchain branches")
-        # plt.savefig('branch_lengths_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
+        plt.savefig('branch_lengths_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
         plt.show()
         
     def show_final_stats(self):
@@ -1216,6 +1216,7 @@ if __name__=="__main__":
     simul.show_blocks()
     simul.show_peer_graph()
     simul.peer_list[0].show_final_stats()
+    simul.peer_list[-1].show_final_stats()
     for i in range(simul.cfg["num_peers"]):
         simul.peer_list[i].write_block_arrival_time()
         
