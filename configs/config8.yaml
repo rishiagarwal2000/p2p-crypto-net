@@ -23,3 +23,5 @@ mean_mining_time :
 mining_fee : 1
 max_events : 500000
 text_files_folder : "Block_Arrivals"
+attacker : None
+attacker_connection : 0

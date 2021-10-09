@@ -22,3 +22,5 @@ hashing_fractions :
 mining_fee : 20
 max_events : 500000
 text_files_folder : "Block_Arrivals"
+attacker : None
+attacker_connection : 0
