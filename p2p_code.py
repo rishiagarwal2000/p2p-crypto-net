@@ -161,7 +161,7 @@ class Simulator:
             total_deg+=2*m
         if self.cfg["attacker"] is not None:
             graph.append([])
-            attachments=np.random.choice(list(range(n)),size=int(self.cfg["attacker_connection"]*n),replace=False)
+            attachments=np.random.choice(list(range(n)),size=int(self.cfg["attacker_connection"]*n),replace=False,p=degrees/total_deg)
             for peer_id in attachments:
                 graph[peer_id].append(n)
             graph[n] = list(attachments)
