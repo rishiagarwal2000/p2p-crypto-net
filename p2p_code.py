@@ -46,6 +46,7 @@ class Simulator:
 
     Args:
         cfg_file (str): .yaml file containing all parameters for the simulation 
+        graph_seed (int): Seed parameter to control the p2p graph created
 
     Attributes:
         cfg_filename (str): .yaml file containing all simulation configuration parameters
@@ -57,16 +58,18 @@ class Simulator:
         genesis_block (Block): The genesis block that is supplied to every peer at the start of the simulation
         peer_graph (list of list of int): P2P network between peers stored in the format of adjacency lists using peer IDs
         peer_list (list of Peer): List of Peer objects representing peers in P2P network
+        graph_seed (int): Seed parameter for p2p graph creation
         
     """
 
-    def __init__(self, cfg_file):
+    def __init__(self, cfg_file, graph_seed):
         self.cfg_filename = cfg_file
         with open(cfg_file,'r') as fp:
             self.cfg = yaml.safe_load(fp) 
         self.event_queue = PriorityQueue(0)
         self.current_time = 0
         self.rho = np.random.uniform(self.cfg["low_rho"], self.cfg["high_rho"],size=(self.cfg["num_peers"],self.cfg["num_peers"]))
+        self.graph_seed = graph_seed
 
     def calc_latency(self,type_s, type_r, data_size, rho_val):
         """Calculates latency between two peers in network
@@ -101,6 +104,7 @@ class Simulator:
             A list of list of int representing the graph in adjacency list format
 
         """
+        np.random.seed(self.graph_seed)
         n = self.cfg["num_peers"]
         if self.cfg["attacker"] is not None:
             n-=1
@@ -134,7 +138,7 @@ class Simulator:
             A list of list of int representing the graph in adjacency list format
 
         """
-        np.random.seed(1)
+        np.random.seed(self.graph_seed)
         n = self.cfg["num_peers"]
         if self.cfg["attacker"] is not None:
             n-=1
@@ -1311,8 +1315,9 @@ class Transaction:
 if __name__=="__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, required=True)
+    parser.add_argument('--graph_seed', type=int, required=True)
     args = parser.parse_args()
-    simul = Simulator(args.config)
+    simul = Simulator(args.config,args.graph_seed)
     simul.start_world()
     simul.show_txns()
     simul.show_blocks()
