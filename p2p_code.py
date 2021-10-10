@@ -283,7 +283,7 @@ class Simulator:
         if self.cfg["attacker"] is None:
             print("No attacker in network. Gamma does not hold any relevance in this case")
         else:
-            fool_list=[fools for block, fools in self.gamma_recorder]
+            fool_list=[fools for block, fools in self.gamma_recorder.items()]
             total_honest_miners = self.cfg["num_peers"]-1
             if len(fool_list)==0:
                 print("No 0_prime cases were encountered by attacker")
