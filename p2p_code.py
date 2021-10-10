@@ -70,6 +70,7 @@ class Simulator:
         self.current_time = 0
         self.rho = np.random.uniform(self.cfg["low_rho"], self.cfg["high_rho"],size=(self.cfg["num_peers"],self.cfg["num_peers"]))
         self.graph_seed = graph_seed
+        self.gamma_recorder = {}
 
     def calc_latency(self,type_s, type_r, data_size, rho_val):
         """Calculates latency between two peers in network
@@ -270,7 +271,25 @@ class Simulator:
         self.create_peers()
         self.initialise_event_queue()
         self.run_world()
-        
+
+    def record_marker(self,block):
+        assert block not in self.gamma_recorder,"Block to be marked is already present. Logical error"
+        self.gamma_recorder[block]=0
+
+    def I_got_marker(self,block):
+        self.gamma_recorder[block]+=1
+
+    def show_gamma(self):
+        if self.cfg["attacker"] is None:
+            print("No attacker in network. Gamma does not hold any relevance in this case")
+        else:
+            fool_list=[fools for block, fools in self.gamma_recorder]
+            total_honest_miners = self.cfg["num_peers"]-1
+            if len(fool_list)==0:
+                print("No 0_prime cases were encountered by attacker")
+            else:
+                print("The actual gamma factor averaged over all 0_prime cases is {}".format(np.sum(fool_list)/(total_honest_miners*len(fool_list))))
+    
     def show_txns(self):
         """Displays total transactions created by each peer at the end of simulation
 
@@ -700,6 +719,8 @@ class Peer:
                         self.next_block_creation_event.execute = False
                     self.pending_txns -= temp_chain_end.seen_txns
                     self.current_chain_end = temp_chain_end
+                    if self.current_chain_end.att_marker:
+                        self.simulator.I_got_marker(self.current_chain_end)
                     self.mine_block()
     
     def get_stats(self):
@@ -961,6 +982,9 @@ class Selfish_miner(Peer):
             how_many=len(self.private_blocks)
         for block in self.private_blocks[:how_many]:
             self.broadcast(block)
+        if self.current_selfish_state==-1:
+            self.private_blocks[how_many-1].mark_it()
+            self.simulator.record_marker(self.private_blocks[how_many-1])
         self.private_blocks=self.private_blocks[how_many:]
 
     def create_block(self, args):
@@ -1030,18 +1054,18 @@ class Selfish_miner(Peer):
                     self.pending_txns -= temp_chain_end.seen_txns
                     self.mine_block()
                 elif temp_chain_end.chain_length == self.current_chain_end.chain_length and self.current_selfish_state > 0:
-                    self.release_private_chain(-1)
                     self.current_selfish_state=-1
+                    self.release_private_chain(-1)
                     self.longest_honest_chain_length = temp_chain_end.chain_length
                 elif temp_chain_end.chain_length > self.longest_honest_chain_length and self.current_selfish_state >= 2:
                     lead = self.current_chain_end.chain_length-temp_chain_end.chain_length
                     if lead==1:
-                        self.release_private_chain(-1)
                         self.current_selfish_state=0
+                        self.release_private_chain(-1)
                         self.longest_honest_chain_length = self.current_chain_end.chain_length
                     else:
-                        self.release_private_chain(temp_chain_end.chain_length-self.longest_honest_chain_length)
                         self.current_selfish_state = lead 
+                        self.release_private_chain(temp_chain_end.chain_length-self.longest_honest_chain_length)
                         self.longest_honest_chain_length = temp_chain_end.chain_length
 
 class Stubborn_miner(Selfish_miner):
@@ -1161,13 +1185,13 @@ class Stubborn_miner(Selfish_miner):
                     self.pending_txns -= temp_chain_end.seen_txns
                     self.mine_block()
                 elif temp_chain_end.chain_length == self.current_chain_end.chain_length and self.current_selfish_state > 0:
-                    self.release_private_chain(-1)
                     self.current_selfish_state=-1
+                    self.release_private_chain(-1)
                     self.longest_honest_chain_length = temp_chain_end.chain_length
                 elif temp_chain_end.chain_length > self.longest_honest_chain_length and self.current_selfish_state >= 2:
                     lead = self.current_chain_end.chain_length-temp_chain_end.chain_length
-                    self.release_private_chain(temp_chain_end.chain_length-self.longest_honest_chain_length)
                     self.current_selfish_state = lead 
+                    self.release_private_chain(temp_chain_end.chain_length-self.longest_honest_chain_length)
                     self.longest_honest_chain_length = temp_chain_end.chain_length
 
 class Block:
@@ -1216,6 +1240,7 @@ class Block:
             self.seen_txns = self.parent.seen_txns | set(self.txns)
         self.peers_who_saw_child = [False]*number_of_peers
         self.sum_chpeers = 0
+        self.att_marker = False 
 
     def store_checkpoint(self, checkpoint):
         """Records the checkpoint at this block
@@ -1250,6 +1275,9 @@ class Block:
                 gc.collect()
             except:
                 pass
+    
+    def mark_it(self):
+        self.att_marker=True
 
 class Event:
     """Event class instants represent an event to be executed in the event_queue
@@ -1324,6 +1352,8 @@ if __name__=="__main__":
     simul.show_peer_graph()
     simul.peer_list[0].show_final_stats()
     simul.peer_list[-1].show_final_stats()
+    print("*********************")
+    simul.show_gamma()
     for i in range(simul.cfg["num_peers"]):
         simul.peer_list[i].write_block_arrival_time()
         
