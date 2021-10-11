@@ -371,6 +371,8 @@ class Simulator:
         plt.savefig("p2p_graph_{}.png".format(os.path.basename(self.cfg_filename)), dpi=300, bbox_inches='tight')
         if self.show_plots:
             plt.show()
+        else:
+            plt.clf()
         
 class Peer:
     """Peer class instants represent a peer in the network
@@ -568,7 +570,7 @@ class Peer:
         self.mine_block()
 
     def update_checkpoint(self, txn, checkpoint): 
-        """Given a transaction and a dictionary of balances for each pair it updates the balances 
+        """Given a transaction and a dictionary of balances for each peer it updates the balances 
         of the peers involved in the transaction
 
         Args:
@@ -818,6 +820,8 @@ class Peer:
         plt.savefig('blockchain_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
         if self.simulator.show_plots:
             plt.show()
+        else:
+            plt.clf()
 
     def show_fraction_of_chain(self):
         """Displays a bar graph showing the fraction of blocks in the main chain created by this peer and the 
@@ -846,6 +850,8 @@ class Peer:
         plt.savefig('chain_fraction_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
         if self.simulator.show_plots:
             plt.show()
+        else:
+            plt.clf()
 
     def show_fraction_of_total_blocks(self):
         """Displays a bar graph showing the fraction of blocks created by this peer that got into 
@@ -875,6 +881,8 @@ class Peer:
         plt.savefig('success_fraction_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
         if self.simulator.show_plots:
             plt.show()
+        else:
+            plt.clf()
     
     def write_block_arrival_time(self):
         """Writes the block arrival data to a text file
@@ -928,6 +936,8 @@ class Peer:
         plt.savefig('branch_lengths_{}_{}.png'.format(self.idx,os.path.basename(self.simulator.cfg_filename)), dpi=300, bbox_inches='tight')
         if self.simulator.show_plots:
             plt.show()
+        else:
+            plt.clf()
         
     def show_final_stats(self):
         """Calls the plotting functions all together. Also displays some data regarding the average number of 
