@@ -1,8 +1,8 @@
 import os, sys
 
-attacker = "selfish"
-gamma = 50
-adv_perc = 35
+# attacker = "selfish"
+# gamma = 50
+# adv_perc = 35
 
 def gen(attacker, gamma, adv_perc):
     n = 100
@@ -46,4 +46,4 @@ if __name__ == "__main__":
     hps = [10, 20, 35, 50]
     for gamma in gammas:
         for hp in hps:
-            gen("selfish", gamma, hp)
+            gen("stubborn", gamma, hp)
