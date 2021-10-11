@@ -191,7 +191,7 @@ class Simulator:
             num_honest_miners-=1
         self.genesis_block = Block(None,None,None,None,True,self.cfg["num_peers"])
         self.hashing_fractions = self.cfg["hashing_fractions"]
-        assert np.sum(self.hashing_fractions)==1, "Hashing fractions for {} peers should sum to 1".format(n)
+        assert np.isclose(np.sum(self.hashing_fractions), 1), "Hashing fractions for {} peers should sum to 1".format(n)
         mining_times = [self.cfg["net_mean_mining_time"]/hf for hf in self.hashing_fractions]
         slow_peers = round(num_honest_miners*self.cfg["slow_fraction"])
         temp = list(np.random.permutation(num_honest_miners))
@@ -257,7 +257,7 @@ class Simulator:
             self.current_time = entry.priority
             entry.data.execute_event()
             completed_events+=1
-            print(completed_events)
+            print(completed_events, end="\r")
         print("Simulation is over with total {} events executed at simulation time {} sec".format(completed_events,self.current_time/1000))
 
 
