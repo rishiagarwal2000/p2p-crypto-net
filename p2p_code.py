@@ -860,7 +860,7 @@ class Peer:
             
         """
         blocks_per_peer,total_blocks_per_peer = self.get_stats()
-        y=[blocks_per_peer[self.idx]/total_blocks_per_peer[self.idx] if total_blocks_per_peer[self.idx] !=0 else 1,(self.current_chain_end.chain_length-1-blocks_per_peer[self.idx])/(len(self.blocktree)-1-total_blocks_per_peer[self.idx]) if (len(self.blocktree)-1-total_blocks_per_peer[self.idx]) != 0 else 1,(self.current_chain_end.chain_length-1)/(len(self.blocktree)-1)]
+        y=[blocks_per_peer[self.idx]/max(total_blocks_per_peer[self.idx],1),(self.current_chain_end.chain_length-1-blocks_per_peer[self.idx])/(len(self.blocktree)-1-total_blocks_per_peer[self.idx]),(self.current_chain_end.chain_length-1)/(len(self.blocktree)-1)]
         x=["peer_{}\nHp:{}\n{}".format(self.idx,self.simulator.hashing_fractions[self.idx],self.peer_type),"Other Peers","All Together"]
         fig = plt.figure(figsize = (10, 5))
         plt.bar(x, y, color ='blue',width = 0.4)
