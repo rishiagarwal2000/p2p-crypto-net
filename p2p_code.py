@@ -951,7 +951,8 @@ class Peer:
         # self.get_branch_lengths()
         print("Ratio of blocks in the main chain to the total number of blocks generated across all peers : {}".format((self.current_chain_end.chain_length-1)/(len(self.blocktree)-1)))
         print("Average Number of Transactions per block in entire blockchain for Peer ID {} : {}".format(self.idx,self.blockchain_txns/len(self.blocktree)))
-
+        print("Length of blocktree : {}".format(len(self.blocktree)))
+        
 class Selfish_miner(Peer):
     """
     Represents a Selfish Miner in the network
