@@ -7,7 +7,7 @@ import networkx as nx
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import os
-import gc
+import random
 
 class PriorityEntry(object):
     """The event queue used is a min priority queue and this is the class used 
@@ -373,7 +373,7 @@ class Simulator:
             plt.show()
         else:
             plt.clf()
-        
+
 class Peer:
     """Peer class instants represent a peer in the network
 
@@ -407,10 +407,6 @@ class Peer:
         block_arrival_text (str): Records the block hash, block number, time of arrival and parent block hash of
             every received block
         blockchain_txns (int): Total number of transactions in the blocktree
-        pending_txn_max_size (int): Maximum size of the pending_txns pool
-        pending_txn_option_size (int): Sums up the length of pending_txns at the time of choosing a set of
-            transactions to include in a block being mined. Used to find average size of pending_txns pool
-            at time of mining
         number_of_mines (int): Number of times a set of transactions was chosen for a block to be mined
         neighbours (dict of Peer to set of Block or Transaction): Dictionary recording what messages have been 
             sent to each of its immediate neighbours or peers
@@ -434,8 +430,6 @@ class Peer:
         self.total_txns=0
         self.block_arrival_text=""
         self.blockchain_txns=0
-        self.pending_txn_max_size=0
-        self.pending_txn_option_size = 0
         self.number_of_mines=0
 
     def initialise_neighbours(self, neighbours):
@@ -486,9 +480,10 @@ class Peer:
         """
         # Samples from the exponential distribution
         # Returns Id_y, C, and the time of transaction
-        current_peers = list(range(self.simulator.cfg["num_peers"]))
-        current_peers.remove(self.idx)
-        idy = np.random.choice(current_peers)
+        # current_peers = list(range(self.simulator.cfg["num_peers"]))
+        # current_peers.remove(self.idx)
+        # idy = np.random.choice(current_peers)
+        idy = int(random.random()*self.simulator.cfg["num_peers"])
         txn_id = uuid1()
         if self.idx in self.current_chain_end.checkpoint:
             coins = np.random.uniform(0, self.current_chain_end.checkpoint[self.idx]/100000)
@@ -496,7 +491,6 @@ class Peer:
             coins = 0 
         new_txn = Transaction(txn_id, self.idx, idy, coins)
         self.pending_txns.add(new_txn)
-        self.pending_txn_max_size = max(self.pending_txn_max_size,len(self.pending_txns))
         self.broadcast(new_txn)
         self.total_txns+=1
         next_txn_time = round(self.simulator.current_time+np.random.exponential(self.Ttx),2)
@@ -518,12 +512,12 @@ class Peer:
         coinbase_id = uuid1()
         coinbase = Transaction(coinbase_id,None,self.idx,self.mining_fee)
         num_of_transactions = min(1024,len(self.pending_txns)+1)-1#np.random.randint(0,min(1024,len(self.pending_txns)+1))
-        self.pending_txn_option_size +=len(self.pending_txns)
         self.number_of_mines+=1
-        curr_block_txns = list(np.random.choice(list(self.pending_txns),size=num_of_transactions,replace=False))
+        # curr_block_txns = list(np.random.choice(list(self.pending_txns),size=num_of_transactions,replace=False))
+        curr_block_txns = list(self.pending_txns)[:num_of_transactions]
         curr_block_txns = [coinbase]+curr_block_txns
         checkpoint = self.current_chain_end.checkpoint.copy()
-        checkpoint, txn_idx = self.get_new_checkpoint(checkpoint, curr_block_txns,mining=True)
+        txn_idx = self.get_new_checkpoint(checkpoint, curr_block_txns,mining=True)
         blkid = uuid1()
         args = {"block": Block(blkid, self.current_chain_end, curr_block_txns[:txn_idx], self.idx, False,self.simulator.cfg["num_peers"])}
         creation_time = round(self.simulator.current_time + np.random.exponential(self.mean_mining_time),2)
@@ -620,15 +614,15 @@ class Peer:
         """
         txn_idx = 0
         for txn in txns:
-            temp_checkpoint = checkpoint.copy()
+            # temp_checkpoint = checkpoint.copy()
             checkpoint = self.update_checkpoint(txn, checkpoint)
             if checkpoint is None:
                 if mining:
-                    return temp_checkpoint, txn_idx
+                    return txn_idx
                 return None
             txn_idx+=1
         if mining:
-            return checkpoint, txn_idx
+            return txn_idx
         return checkpoint
 
     def receive_transaction(self, args):
@@ -645,7 +639,6 @@ class Peer:
         self.broadcast(txn)
         if txn not in self.current_chain_end.seen_txns:
             self.pending_txns.add(txn)
-            self.pending_txn_max_size = max(self.pending_txn_max_size,len(self.pending_txns))
     
     def add_pending_blocks(self, new_block):
         """Adds pending blocks (whose parents haven't arrived) to the blockchain on addition of a 
@@ -958,8 +951,6 @@ class Peer:
         # self.get_branch_lengths()
         print("Ratio of blocks in the main chain to the total number of blocks generated across all peers : {}".format((self.current_chain_end.chain_length-1)/(len(self.blocktree)-1)))
         print("Average Number of Transactions per block in entire blockchain for Peer ID {} : {}".format(self.idx,self.blockchain_txns/len(self.blocktree)))
-        print("Max Size of pending txn pool for Peer ID {} : {}".format(self.idx,self.pending_txn_max_size))
-        print("Average size of transaction pool at time of choosing txns is {}\n".format(self.pending_txn_option_size/self.number_of_mines))
 
 class Selfish_miner(Peer):
     """
@@ -995,10 +986,6 @@ class Selfish_miner(Peer):
         block_arrival_text (str): Records the block hash, block number, time of arrival and parent block hash of
             every received block
         blockchain_txns (int): Total number of transactions in the blocktree
-        pending_txn_max_size (int): Maximum size of the pending_txns pool
-        pending_txn_option_size (int): Sums up the length of pending_txns at the time of choosing a set of
-            transactions to include in a block being mined. Used to find average size of pending_txns pool
-            at time of mining
         number_of_mines (int): Number of times a set of transactions was chosen for a block to be mined
         neighbours (dict of Peer to set of Block or Transaction): Dictionary recording what messages have been 
             sent to each of its immediate neighbours or peers
@@ -1152,10 +1139,6 @@ class Stubborn_miner(Selfish_miner):
         block_arrival_text (str): Records the block hash, block number, time of arrival and parent block hash of
             every received block
         blockchain_txns (int): Total number of transactions in the blocktree
-        pending_txn_max_size (int): Maximum size of the pending_txns pool
-        pending_txn_option_size (int): Sums up the length of pending_txns at the time of choosing a set of
-            transactions to include in a block being mined. Used to find average size of pending_txns pool
-            at time of mining
         number_of_mines (int): Number of times a set of transactions was chosen for a block to be mined
         neighbours (dict of Peer to set of Block or Transaction): Dictionary recording what messages have been 
             sent to each of its immediate neighbours or peers
@@ -1322,11 +1305,20 @@ class Block:
         if self.sum_chpeers == len(self.peers_who_saw_child):
             try:
                 del self.seen_txns
-                gc.collect()
             except:
                 pass
     
     def mark_it(self):
+        """
+        Sets the attacker's 0_prime marker to True
+
+        Args:
+            None
+        
+        Returns:
+            None
+
+        """
         self.att_marker=True
 
 class Event:
@@ -1407,9 +1399,3 @@ if __name__=="__main__":
     simul.show_gamma()
     for i in range(simul.cfg["num_peers"]):
         simul.peer_list[i].write_block_arrival_time()
-        
-    
-
-
-    
-
