@@ -110,7 +110,7 @@ hashing_fractions :
   - 0.01
   - 0.5
 mining_fee : 20
-max_time : 300000000
+max_time : 30000000
 text_files_folder : "Block_Arrivals"
 attacker : "selfish"
 attacker_connection : 0.25
