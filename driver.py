@@ -8,5 +8,6 @@ if __name__ == "__main__":
         for hp in hps:
             print("#"*20 + f"  {gamma} {hp} " + "#"*20)
             path = os.path.join("configs", f"{attacker}", f"gamma_{gamma}", f"{attacker}_{hp}_{gamma}.yaml")
-            cmd = f"python p2p_code.py --config {path} --graph_seed 0"
+            gamma_filename = "effective_gamma.txt"
+            cmd = f"python p2p_code.py --config {path} --graph_seed 0 --store_gamma {gamma_filename}".
             os.system(cmd)

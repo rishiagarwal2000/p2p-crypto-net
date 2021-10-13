@@ -315,14 +315,18 @@ class Simulator:
         """
         if self.cfg["attacker"] is None:
             print("No attacker in network. Gamma does not hold any relevance in this case")
+            return -2
         else:
             fool_list=[fools for block, fools in self.gamma_recorder.items()]
             total_honest_miners = self.cfg["num_peers"]-1
             if len(fool_list)==0:
                 print("No 0_prime cases were encountered by attacker")
+                return -1
             else:
-                print("The actual gamma factor averaged over all 0_prime cases is {}".format(np.sum(fool_list)/(total_honest_miners*len(fool_list))))
-    
+                average = np.sum(fool_list)/(total_honest_miners*len(fool_list))
+                print("The actual gamma factor averaged over all 0_prime cases is {}".format(average))
+                return average
+
     def show_txns(self):
         """Displays total transactions created by each peer at the end of simulation
 
@@ -1388,6 +1392,7 @@ if __name__=="__main__":
     parser.add_argument('--config', type=str, required=True)
     parser.add_argument('--graph_seed', type=int, required=True)
     parser.add_argument('--show_plots',action="store_true")
+    parser.add_argument('--store_gamma',type=str,required=False)
     args = parser.parse_args()
     simul = Simulator(args.config,args.graph_seed,args.show_plots)
     simul.start_world()
@@ -1397,6 +1402,10 @@ if __name__=="__main__":
     simul.peer_list[0].show_final_stats()
     simul.peer_list[-1].show_final_stats()
     print("*********************")
-    simul.show_gamma()
+    eff_gamma=simul.show_gamma()
+    if args.store_gamma is not None:
+        with open(args.store_gamma,'a') as fp:
+            fp.write("{}, {}, {}\n".format(simul.hashing_fractions[-1],simul.cfg["attacker_connection"],eff_gamma))
+        print("Effective Gamma written to file {} in the format : alpha, zeta, effective_gamma".format(args.store_gamma))
     for i in range(simul.cfg["num_peers"]):
         simul.peer_list[i].write_block_arrival_time()
