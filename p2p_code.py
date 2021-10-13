@@ -892,6 +892,8 @@ class Peer:
             
         """
         folder = self.simulator.cfg["text_files_folder"]
+        if not os.path.isdir(folder):
+            os.mkdir(folder)
         target = os.path.join(folder,os.path.basename(self.simulator.cfg_filename))
         if not os.path.isdir(target):
             os.mkdir(target)
